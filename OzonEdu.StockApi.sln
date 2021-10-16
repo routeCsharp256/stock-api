@@ -7,6 +7,7 @@ ProjectSection(SolutionItems) = preProject
 	readme.md = readme.md
 	.editorconfig = .editorconfig
 	.gitignore = .gitignore
+	Dockerfile = Dockerfile
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CBE64D9E-C3C4-4690-AAF8-6374CCFA4B2E}"
