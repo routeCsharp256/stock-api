@@ -1,10 +1,12 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OzonEdu.StockApi.HttpModels;
-using OzonEdu.StockApi.Models;
+using OzonEdu.StockApi.Infrastructure.Commands;
+using OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate;
 using OzonEdu.StockApi.Services.Interfaces;
+using StockItem = OzonEdu.StockApi.Models.StockItem;
 
 namespace OzonEdu.StockApi.Controllers.V1
 {
@@ -14,10 +16,12 @@ namespace OzonEdu.StockApi.Controllers.V1
     public class StockController : ControllerBase
     {
         private readonly IStockService _stockService;
+        private readonly IMediator _mediator;
 
-        public StockController(IStockService stockService)
+        public StockController(IStockService stockService, IMediator mediator)
         {
             _stockService = stockService;
+            _mediator = mediator;
         }
         
         [HttpGet]
@@ -39,25 +43,38 @@ namespace OzonEdu.StockApi.Controllers.V1
             return stockItem;
         }
 
+        [HttpGet("quantity/{sku:long}")]
+        public async Task<ActionResult<int>> GetAvailableQuantity(long sku, CancellationToken cancellationToken)
+        {
+            var query = new GetAvailableQuantityQuery()
+            {
+                Sku = sku
+            };
+            var result = await _mediator.Send(query, cancellationToken);
+            
+            return result;
+        }
+
         /// <summary>
         /// Добавляет stock item.
         /// </summary>
         [HttpPost]
-        public async Task<ActionResult<StockItem>> Add(StockItemPostViewModel postViewModel, CancellationToken token)
+        public async Task<ActionResult<int>> Add(StockItemPostViewModel postViewModel, CancellationToken token)
         {
-            var createdStockItem = await _stockService.Add(new StockItemCreationModel
+            var createStockItemCommand = new CreateStockItemCommand()
             {
-                ItemName = postViewModel.ItemName,
-                Quantity = postViewModel.Quantity
-            }, token);
-            return Ok(createdStockItem);
-        }
-    }
+                Name = postViewModel.Name,
+                Quantity = postViewModel.Quantity,
+                Sku = postViewModel.Sku,
+                Tags = postViewModel.Tags,
+                ClothingSize = postViewModel.ClothingSize,
+                MinimalQuantity = postViewModel.MinimalQuantity,
+                StockItemType = postViewModel.StockItemType
+            };
 
-    public class CustomException : Exception
-    {
-        public CustomException() : base("some custom exception")
-        {
+            var result = await _mediator.Send(createStockItemCommand, token);
+            
+            return Ok(result);
         }
     }
 }

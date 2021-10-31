@@ -1,6 +1,8 @@
-namespace OzonEdu.StockApi.HttpModels
+﻿using MediatR;
+
+namespace OzonEdu.StockApi.Infrastructure.Commands
 {
-    public class StockItemPostViewModel
+    public class CreateStockItemCommand : IRequest<int>
     {
         /// <summary>
         /// Идентификатор нового товара
