@@ -13,7 +13,7 @@ namespace OzonEdu.StockApi.Infrastructure.Middlewares
         private readonly RequestDelegate _next;
         private readonly ILogger<ResponseLoggingMiddleware> _logger;
 
-        internal ResponseLoggingMiddleware(RequestDelegate next, ILogger<ResponseLoggingMiddleware> logger)
+        public ResponseLoggingMiddleware(RequestDelegate next, ILogger<ResponseLoggingMiddleware> logger)
         {
             _next = next;
             _logger = logger;

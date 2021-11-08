@@ -16,7 +16,7 @@ namespace OzonEdu.StockApi.Infrastructure.Interceptors
             WriteIndented = true
         };
 
-        internal LoggingInterceptor(ILogger<LoggingInterceptor> logger)
+        public LoggingInterceptor(ILogger<LoggingInterceptor> logger)
         {
             _logger = logger;
         }

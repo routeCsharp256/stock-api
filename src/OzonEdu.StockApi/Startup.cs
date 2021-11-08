@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OzonEdu.StockApi.GrpcServices;
-using OzonEdu.StockApi.Services;
-using OzonEdu.StockApi.Services.Interfaces;
 
 namespace OzonEdu.StockApi
 {
@@ -21,7 +19,6 @@ namespace OzonEdu.StockApi
 		public void ConfigureServices(IServiceCollection services)
         {;
 	        services.AddMediatR(typeof(Startup));
-	        services.AddSingleton<IStockService, StockService>();
         }
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

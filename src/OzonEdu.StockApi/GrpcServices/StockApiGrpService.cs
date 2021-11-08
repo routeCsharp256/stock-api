@@ -1,20 +1,19 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using MediatR;
 using OzonEdu.StockApi.Grpc;
-using OzonEdu.StockApi.Services.Interfaces;
 
 namespace OzonEdu.StockApi.GrpcServices
 {
     public class StockApiGrpService : StockApiGrpc.StockApiGrpcBase
     {
-        private readonly IStockService _stockService;
+        private readonly IMediator _mediator;
 
-        public StockApiGrpService(IStockService stockService)
+        public StockApiGrpService(IMediator mediator)
         {
-            _stockService = stockService;
+            _mediator = mediator;
         }
 
         public override async Task<GetAllStockItemsResponse> GetAllStockItems(
@@ -22,16 +21,7 @@ namespace OzonEdu.StockApi.GrpcServices
             ServerCallContext context)
         {
             // Использовать mediatr
-            var stockItems = await _stockService.GetAll(context.CancellationToken);
-            return new GetAllStockItemsResponse
-            {
-                Stocks = { stockItems.Select(x => new GetAllStockItemsResponseUnit
-                {
-                    ItemId = x.ItemId,
-                    Quantity = x.Quantity,
-                    ItemName = x.ItemName
-                })}
-            };
+            throw new NotImplementedException();
         }
 
         public override Task<Empty> AddStockItem(AddStockItemRequest request, ServerCallContext context)

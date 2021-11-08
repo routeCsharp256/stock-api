@@ -8,7 +8,8 @@ namespace OzonEdu.StockApi.Infrastructure.Middlewares
 {
     internal class VersionMiddleware
     {
-        internal VersionMiddleware(RequestDelegate _)
+        // ReSharper disable once UnusedParameter.Local
+        public VersionMiddleware(RequestDelegate next)
         {
         }
 
@@ -16,11 +17,11 @@ namespace OzonEdu.StockApi.Infrastructure.Middlewares
         {
             var executingAssembly = Assembly.GetExecutingAssembly().GetName();
             var version = executingAssembly.Version?.ToString() ?? "no version";
-            var name = executingAssembly.FullName;
+            var assemblyName = executingAssembly.Name;
 
             var result = new
             {
-                Service = name,
+                Service = assemblyName,
                 Version = version
             };
             var jsonResult = JsonSerializer.Serialize(result, JsonSerializerOptionsFactory.Default);
