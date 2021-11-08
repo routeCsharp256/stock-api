@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OzonEdu.StockApi.HttpModels;
-using OzonEdu.StockApi.Infrastructure.Commands;
+using OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem;
 using OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate;
 using OzonEdu.StockApi.Services.Interfaces;
 using StockItem = OzonEdu.StockApi.Models.StockItem;

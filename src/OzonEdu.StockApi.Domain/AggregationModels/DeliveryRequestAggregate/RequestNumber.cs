@@ -1,4 +1,4 @@
-﻿namespace OzonEdu.StockApi.Domain.AggregatesModels.DeliveryRequestAggregate
+﻿namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
 {
     public class RequestNumber
     {

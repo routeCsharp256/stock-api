@@ -1,4 +1,3 @@
-using System;
 using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using Xunit;
 

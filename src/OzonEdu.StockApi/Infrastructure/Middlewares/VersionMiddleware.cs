@@ -1,19 +1,30 @@
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using OzonEdu.StockApi.Infrastructure.Extensions;
 
 namespace OzonEdu.StockApi.Infrastructure.Middlewares
 {
-    public class VersionMiddleware
+    internal class VersionMiddleware
     {
-        public VersionMiddleware(RequestDelegate next)
+        internal VersionMiddleware(RequestDelegate _)
         {
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "no version";
-            await context.Response.WriteAsync(version);
+            var executingAssembly = Assembly.GetExecutingAssembly().GetName();
+            var version = executingAssembly.Version?.ToString() ?? "no version";
+            var name = executingAssembly.FullName;
+
+            var result = new
+            {
+                Service = name,
+                Version = version
+            };
+            var jsonResult = JsonSerializer.Serialize(result, JsonSerializerOptionsFactory.Default);
+            await context.Response.WriteAsync(jsonResult);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using OzonEdu.StockApi.Domain.Events;
 
-namespace OzonEdu.StockApi.Infrastructure.Handlers
+namespace OzonEdu.StockApi.Infrastructure.Handlers.DomainEvent
 {
     public class ReachedMinimumDomainEventHandler : INotificationHandler<ReachedMinimumStockItemsNumberDomainEvent> 
     {

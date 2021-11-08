@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using MediatR;
 
-namespace OzonEdu.StockApi.Infrastructure.Commands
+namespace OzonEdu.StockApi.Infrastructure.Commands.CreateDeliveryRequest
 {
     public class CreateDeliveryRequestCommand : IRequest
     {
