@@ -3,10 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using OzonEdu.StockApi.Domain.AggregatesModels.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.ValueObjects;
-using OzonEdu.StockApi.Infrastructure.Commands;
+using OzonEdu.StockApi.Infrastructure.Commands.CreateDeliveryRequest;
 
 namespace OzonEdu.StockApi.Infrastructure.Handlers.DeliveryRequestAggregate
 {

@@ -1,6 +1,6 @@
 ﻿using OzonEdu.StockApi.Domain.Models;
 
-namespace OzonEdu.StockApi.Domain.AggregatesModels.DeliveryRequestAggregate
+namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
 {
     public class RequestStatus : Enumeration
     {
