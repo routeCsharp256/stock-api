@@ -7,21 +7,24 @@ using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.ValueObjects;
 using OzonEdu.StockApi.Domain.Models;
 using OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem;
+using OzonEdu.StockApi.Infrastructure.Repositories;
 
 namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
 {
     public class CreateStockItemCommandHandler : IRequestHandler<CreateStockItemCommand, int>
     {
-        private readonly IStockItemRepository _stockItemRepository;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
-        public CreateStockItemCommandHandler(IStockItemRepository stockItemRepository)
+        public CreateStockItemCommandHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
-            _stockItemRepository = stockItemRepository;
+            _unitOfWorkFactory = unitOfWorkFactory;
         }
-        
+
         public async Task<int> Handle(CreateStockItemCommand request, CancellationToken cancellationToken)
         {
-            var stockInDb = await _stockItemRepository.FindBySkuAsync(new Sku(request.Sku), cancellationToken);
+            using var uow = await _unitOfWorkFactory.Create(cancellationToken);
+            var stockInDb = await uow.StockItemRepository
+                .FindBySkuAsync(new Sku(request.Sku), cancellationToken);
             if (stockInDb is not null)
                 throw new Exception($"Stock item with sku {request.Sku} already exist");
 
@@ -38,8 +41,8 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
                 new QuantityValue(request.MinimalQuantity)
                 );
 
-            var createResult = await _stockItemRepository.CreateAsync(newStockItem, cancellationToken);
-            await _stockItemRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            var createResult = await uow.StockItemRepository.CreateAsync(newStockItem, cancellationToken);
+            await uow.SaveChangesAsync(cancellationToken);
             
             return newStockItem.Id;
         }

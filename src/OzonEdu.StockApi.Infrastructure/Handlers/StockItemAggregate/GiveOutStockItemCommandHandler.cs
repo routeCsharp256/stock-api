@@ -2,31 +2,32 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.ValueObjects;
 using OzonEdu.StockApi.Infrastructure.Commands.GiveOutStockItem;
+using OzonEdu.StockApi.Infrastructure.Repositories;
 
 namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
 {
     public class GiveOutStockItemCommandHandler : IRequestHandler<GiveOutStockItemCommand>
     {
-        private readonly IStockItemRepository _stockItemRepository;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
-        public GiveOutStockItemCommandHandler(IStockItemRepository stockItemRepository)
+        public GiveOutStockItemCommandHandler(IUnitOfWorkFactory unitOfWorkFactory)
         {
-            _stockItemRepository = stockItemRepository;
+            _unitOfWorkFactory = unitOfWorkFactory;
         }
 
         public async Task<Unit> Handle(GiveOutStockItemCommand request, CancellationToken cancellationToken)
         {
-            var stockItem = await _stockItemRepository.FindBySkuAsync(new Sku(request.Sku), cancellationToken);
+            using var uow = await _unitOfWorkFactory.Create(cancellationToken);
+            var stockItem = await uow.StockItemRepository.FindBySkuAsync(new Sku(request.Sku), cancellationToken);
             if (stockItem is null)
                 throw new Exception($"Not found with sku {request.Sku}");
-            
+
             stockItem.GiveOutItems(request.Quantity);
-            await _stockItemRepository.UpdateAsync(stockItem, cancellationToken);
-            await _stockItemRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
-            
+            await uow.StockItemRepository.UpdateAsync(stockItem, cancellationToken);
+            await uow.SaveChangesAsync(cancellationToken);
+
             return Unit.Value;
         }
     }
