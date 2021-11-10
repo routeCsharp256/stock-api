@@ -26,10 +26,10 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
             _repositoriesHolder = repositoriesHolder;
         }
 
-        public async Task<IAggregateUnitOfWork> Create(CancellationToken token)
+        public async Task<IUnitOfWork> Create(CancellationToken token)
         {
-            await _dbConnectionFactory.CreateConnection(token);
             var uow = new UnitOfWork(_dbConnectionFactory, _mediator, _repositoriesHolder, _entitiesHolder);
+            await uow.CreateDbConnection(token);
             await uow.CreateTransaction(token);
             return uow;
         }

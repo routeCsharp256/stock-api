@@ -13,7 +13,7 @@ using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
 {
-    public class UnitOfWork : IAggregateUnitOfWork
+    internal class UnitOfWork : IUnitOfWork
     {
         private NpgsqlTransaction _npgsqlTransaction;
         
@@ -22,7 +22,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
         private readonly IRepositoriesHolder _repositoriesHolder;
         private readonly IEntitiesHolder _entitiesHolder;
 
-        public UnitOfWork(
+        internal UnitOfWork(
             IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory,
             IPublisher publisher,
             IRepositoriesHolder repositoriesHolder,
@@ -37,6 +37,11 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
         public IDeliveryRequestRepository DeliveryRequestRepository => _repositoriesHolder.DeliveryRequestRepository;
 
         public IStockItemRepository StockItemRepository => _repositoriesHolder.StockItemRepository;
+
+        public async Task CreateDbConnection(CancellationToken token)
+        {
+            await _dbConnectionFactory.CreateConnection(token);
+        }
 
         public async ValueTask CreateTransaction(CancellationToken token)
         {

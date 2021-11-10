@@ -9,6 +9,6 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces
     /// </summary>
     public interface IUnitOfWorkFactory
     {
-        Task<IAggregateUnitOfWork> Create(CancellationToken token);
+        Task<IUnitOfWork> Create(CancellationToken token);
     }
 }
