@@ -63,6 +63,11 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
             var domainEvents = new Queue<INotification>(
                 _entitiesHolder.UsedEntities
                     .SelectMany(x => x.DomainEvents));
+            foreach (var entity in _entitiesHolder.UsedEntities)
+            {
+                entity.ClearDomainEvents();
+            }
+
             // Можно отправлять все и сразу через Task.WhenAll.
             while (domainEvents.TryDequeue(out var notification))
             {
