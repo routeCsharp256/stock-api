@@ -2,10 +2,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Npgsql;
-using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.Domain.Contracts;
+using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces;
 
-namespace OzonEdu.StockApi.Infrastructure.Repositories
+namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
 {
     public class UnitOfWorkFactory : IUnitOfWorkFactory
     {
@@ -28,7 +28,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories
 
         public async Task<IAggregateUnitOfWork> Create(CancellationToken token)
         {
-            await _dbConnectionFactory.CreateConnection();
+            await _dbConnectionFactory.CreateConnection(token);
             var uow = new UnitOfWork(_dbConnectionFactory, _mediator, _repositoriesHolder, _entitiesHolder);
             await uow.CreateTransaction(token);
             return uow;

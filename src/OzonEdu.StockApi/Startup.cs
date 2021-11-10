@@ -8,7 +8,9 @@ using OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.GrpcServices;
 using OzonEdu.StockApi.Infrastructure.Configuration;
-using OzonEdu.StockApi.Infrastructure.Repositories;
+using OzonEdu.StockApi.Infrastructure.Repositories.Implementation;
+using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure;
+using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace OzonEdu.StockApi
 {

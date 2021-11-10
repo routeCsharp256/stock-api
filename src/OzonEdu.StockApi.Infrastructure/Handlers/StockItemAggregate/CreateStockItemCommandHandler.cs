@@ -7,7 +7,7 @@ using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.ValueObjects;
 using OzonEdu.StockApi.Domain.Models;
 using OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem;
-using OzonEdu.StockApi.Infrastructure.Repositories;
+using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
 {

@@ -1,12 +1,11 @@
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Npgsql;
 using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.ValueObjects;
+using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces;
 
-namespace OzonEdu.StockApi.Infrastructure.Repositories
+namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
 {
     public class StockItemRepository : IStockItemRepository
     {

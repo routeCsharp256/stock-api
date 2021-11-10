@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using OzonEdu.StockApi.Domain.AggregationModels.ValueObjects;
 using OzonEdu.StockApi.Infrastructure.Commands.GiveOutStockItem;
-using OzonEdu.StockApi.Infrastructure.Repositories;
+using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
 {

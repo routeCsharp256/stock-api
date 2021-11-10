@@ -8,8 +8,9 @@ using Npgsql;
 using OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.Domain.Contracts;
+using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces;
 
-namespace OzonEdu.StockApi.Infrastructure.Repositories
+namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
 {
     public class UnitOfWork : IAggregateUnitOfWork
     {

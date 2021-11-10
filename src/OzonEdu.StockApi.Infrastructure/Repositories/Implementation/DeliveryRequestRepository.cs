@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate;
 
-namespace OzonEdu.StockApi.Infrastructure.Repositories
+namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
 {
     public class DeliveryRequestRepository : IDeliveryRequestRepository
     {

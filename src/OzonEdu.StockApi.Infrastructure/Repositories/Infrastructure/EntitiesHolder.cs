@@ -1,8 +1,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using OzonEdu.StockApi.Domain.Models;
+using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces;
 
-namespace OzonEdu.StockApi.Infrastructure.Repositories
+namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
 {
     public class EntitiesHolder : IEntitiesHolder
     {
