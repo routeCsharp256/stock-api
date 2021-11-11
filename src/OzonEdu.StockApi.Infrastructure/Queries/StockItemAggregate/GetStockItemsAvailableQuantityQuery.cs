@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using MediatR;
-using OzonEdu.StockApi.Infrastructure.Models;
+using OzonEdu.StockApi.Infrastructure.Queries.Responses;
 
 namespace OzonEdu.StockApi.Infrastructure.Queries
 {
     /// <summary>
     /// Полуить доступное количество товарных позиций
     /// </summary>
-    public class GetAvailableQuantityQuery : IRequest<GetAvailableQuantityQueryResponse>
+    public class GetStockItemsAvailableQuantityQuery : IRequest<GetStockItemsAvailableQuantityQueryResponse>
     {
         /// <summary>
         /// Идентификатор товарной позиции

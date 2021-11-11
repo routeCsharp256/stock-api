@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using MediatR;
 using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.Infrastructure.Queries;
+using OzonEdu.StockApi.Infrastructure.Queries.Responses;
 
 namespace OzonEdu.StockApi.Infrastructure.Handlers
 {
-    public class GetAvailableQuantityQueryHandler : IRequestHandler<GetAvailableQuantityQuery, GetAvailableQuantityQueryResponse>
+    public class GetAvailableQuantityQueryHandler : IRequestHandler<GetStockItemsAvailableQuantityQuery, GetStockItemsAvailableQuantityQueryResponse>
     {
         private readonly IStockItemRepository _stockItemRepository;
 
@@ -15,10 +16,10 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers
             _stockItemRepository = stockItemRepository;
         }
 
-        public Task<GetAvailableQuantityQueryResponse> Handle(GetAvailableQuantityQuery request, CancellationToken cancellationToken)
+        public Task<GetStockItemsAvailableQuantityQueryResponse> Handle(GetStockItemsAvailableQuantityQuery request, CancellationToken cancellationToken)
         {
             // Поиск по всем элементам и получение количества
-            return Task.FromResult(new GetAvailableQuantityQueryResponse());
+            return Task.FromResult(new GetStockItemsAvailableQuantityQueryResponse());
         }
     }
 }
