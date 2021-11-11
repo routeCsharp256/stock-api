@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OzonEdu.StockApi.HttpModels;
-using OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem;
+using OzonEdu.StockApi.Infrastructure.Commands;
 
 namespace OzonEdu.StockApi.Controllers.V1
 {

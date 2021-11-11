@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate
+namespace OzonEdu.StockApi.Infrastructure.Queries
 {
     /// <summary>
     /// Полуить доступное количество товарных позиций

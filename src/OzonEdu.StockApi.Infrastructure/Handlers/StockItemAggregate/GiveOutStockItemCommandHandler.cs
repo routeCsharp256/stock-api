@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using MediatR;
 using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.ValueObjects;
-using OzonEdu.StockApi.Infrastructure.Commands.GiveOutStockItem;
+using OzonEdu.StockApi.Infrastructure.Commands;
 
-namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
+namespace OzonEdu.StockApi.Infrastructure.Handlers
 {
     public class GiveOutStockItemCommandHandler : IRequestHandler<GiveOutStockItemCommand>
     {
