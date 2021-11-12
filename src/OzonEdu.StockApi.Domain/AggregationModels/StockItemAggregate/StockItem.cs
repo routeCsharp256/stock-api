@@ -36,7 +36,7 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
     // id - bigserial
     // request_id - bigint -- айдишник, возвращаемый с supply сервиса.
     // request_status - int -- Просто статус. Без отдельной таблички.
-    
+
     // Табличка delivery_request_sku_maps
     // Табличка связи между запросом на поставку и sku.
     // delivery_requests_id - bigint -- составной ключ
