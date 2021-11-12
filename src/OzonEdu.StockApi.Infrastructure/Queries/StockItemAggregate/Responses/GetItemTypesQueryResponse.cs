@@ -3,8 +3,8 @@ using OzonEdu.StockApi.Infrastructure.Models;
 
 namespace OzonEdu.StockApi.Infrastructure.Queries.Responses
 {
-    public class GetAllStockItemsQueryResponse : IItemsModel<StockItemDto>
+    public class GetItemTypesQueryResponse : IItemsModel<ItemTypeDto>
     {
-        public IReadOnlyList<StockItemDto> Items { get; set; }
+        public IReadOnlyList<ItemTypeDto> Items { get; set; }
     }
 }
