@@ -5,9 +5,8 @@ using OzonEdu.StockApi.Domain.Contracts;
 
 namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
 {
-    // TODO: Читерская штука просто для демонстрации.
-    public interface IItemTypeRepository : IRepository
+    public interface IItemTypeRepository : IRepository<Item>
     {
-        Task<IEnumerable<ItemType>> GetAllTypes(CancellationToken token);
+        Task<IEnumerable<Item>> GetAllTypes(CancellationToken token);
     }
 }

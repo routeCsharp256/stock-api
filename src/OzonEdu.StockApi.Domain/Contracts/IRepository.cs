@@ -4,15 +4,11 @@ using OzonEdu.StockApi.Domain.Models;
 
 namespace OzonEdu.StockApi.Domain.Contracts
 {
-    public interface IRepository
-    {
-    }
-
     /// <summary>
     /// Базовый интерфейс репозитория
     /// </summary>
     /// <typeparam name="TEntity">Объект сущности для управления</typeparam>
-    public interface IRepository<TEntity> : IRepository where TEntity : Entity
+    public interface IRepository<TEntity> where TEntity : Entity
     {
         /// <summary>
         /// Создать новую сущность

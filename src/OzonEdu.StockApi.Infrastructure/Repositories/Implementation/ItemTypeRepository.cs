@@ -12,14 +12,16 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
     public class ItemTypeRepository : IItemTypeRepository
     {
         private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory;
+        private readonly IChangeTracker _changeTracker;
         private const int Timeout = 5;
 
-        public ItemTypeRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory)
+        public ItemTypeRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IChangeTracker changeTracker)
         {
             _dbConnectionFactory = dbConnectionFactory;
+            _changeTracker = changeTracker;
         }
 
-        public async Task<IEnumerable<ItemType>> GetAllTypes(CancellationToken cancellationToken)
+        public async Task<IEnumerable<Item>> GetAllTypes(CancellationToken cancellationToken)
         {
 
             const string sql = @"
@@ -32,7 +34,23 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 cancellationToken: cancellationToken);
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
             var stockItems = await connection.QueryAsync<Models.ItemType>(commandDefinition);
-            return stockItems.Select(x => new ItemType(x.Id, x.Name));
+            var result = stockItems.Select(x => new Item(new ItemType(x.Id, x.Name))).ToList();
+            foreach (var item in result)
+            {
+                _changeTracker.Track(item);
+            }
+
+            return result;
+        }
+
+        public Task<Item> CreateAsync(Item itemToCreate, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<Item> UpdateAsync(Item itemToUpdate, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
