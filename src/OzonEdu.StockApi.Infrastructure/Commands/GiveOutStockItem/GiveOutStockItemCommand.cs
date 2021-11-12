@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace OzonEdu.StockApi.Infrastructure.Commands.GiveOutStockItem
+namespace OzonEdu.StockApi.Infrastructure.Commands
 {
     public class GiveOutStockItemCommand : IRequest
     {
