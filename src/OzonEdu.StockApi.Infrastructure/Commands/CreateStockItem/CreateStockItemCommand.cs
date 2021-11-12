@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem
+namespace OzonEdu.StockApi.Infrastructure.Commands
 {
     public class CreateStockItemCommand : IRequest<int>
     {
