@@ -34,6 +34,5 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Товарные позиции</returns>
         Task<IReadOnlyList<StockItem>> GetAllAsync(CancellationToken cancellationToken);
-        Task<IReadOnlyList<StockItem>> FindBySkusAsync(IReadOnlyList<Sku> skus, CancellationToken cancellationToken);
     }
 }

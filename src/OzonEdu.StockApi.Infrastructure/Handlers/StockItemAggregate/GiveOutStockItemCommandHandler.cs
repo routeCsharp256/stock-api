@@ -24,7 +24,9 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
         {
             // Создать метод по нескольким
             await _unitOfWork.StartTransaction(cancellationToken);
-            var stockItems = await _stockItemRepository.FindBySkusAsync(request.Items.Select(it => new Sku(it.Sku)).ToList(), cancellationToken);
+            var stockItems = await _stockItemRepository.FindBySkusAsync(
+                request.Items.Select(it => new Sku(it.Sku)).ToList(),
+                cancellationToken);
 
             foreach (var stockItem in stockItems)
             {
