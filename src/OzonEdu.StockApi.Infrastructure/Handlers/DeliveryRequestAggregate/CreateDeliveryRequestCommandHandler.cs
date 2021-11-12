@@ -9,7 +9,7 @@ using OzonEdu.StockApi.Infrastructure.Commands.CreateDeliveryRequest;
 
 namespace OzonEdu.StockApi.Infrastructure.Handlers.DeliveryRequestAggregate
 {
-    public class CreateDeliveryRequestCommandHandler : IRequestHandler<CreateDeliveryRequestCommand>
+    public class CreateDeliveryRequestCommandHandler : IRequestHandler<CreateDeliveryRequestCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDeliveryRequestRepository _deliveryRequestRepository;
@@ -19,22 +19,22 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.DeliveryRequestAggregate
             _deliveryRequestRepository = deliveryRequestRepository;
             _unitOfWork = unitOfWork;
         }
-
-        public async Task<Unit> Handle(CreateDeliveryRequestCommand request, CancellationToken cancellationToken)
+        
+        public async Task<int> Handle(CreateDeliveryRequestCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.StartTransaction(cancellationToken);
             var deliveryRequest = new DeliveryRequest(
                 null,
                 RequestStatus.InWork,
-                request.SkuCollection.Select(it => new Sku(it)).ToList());
+                request.Items.Select(it => new Sku(it.Sku)).ToList());
 
             //TODO Тут должен быть запрос к сервису поставок для получения идентификатора поставки
             // и этот идентификатор нужно будет проставить в модель
 
-            await _deliveryRequestRepository.CreateAsync(deliveryRequest, cancellationToken);
+            var result = await _deliveryRequestRepository.CreateAsync(deliveryRequest, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+            return result.Id;
         }
     }
 }

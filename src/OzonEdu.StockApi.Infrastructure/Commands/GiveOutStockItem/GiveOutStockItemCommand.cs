@@ -2,7 +2,7 @@
 using MediatR;
 using OzonEdu.StockApi.Infrastructure.Models;
 
-namespace OzonEdu.StockApi.Infrastructure.Commands
+namespace OzonEdu.StockApi.Infrastructure.Commands.GiveOutStockItem
 {
     public class GiveOutStockItemCommand : IRequest
     {

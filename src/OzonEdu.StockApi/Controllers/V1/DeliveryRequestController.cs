@@ -4,54 +4,57 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OzonEdu.StockApi.Infrastructure.Commands;
+using OzonEdu.StockApi.Infrastructure.Commands.CreateDeliveryRequest;
 using OzonEdu.StockApi.Infrastructure.Models;
-using OzonEdu.StockApi.Infrastructure.Queries;
+using OzonEdu.StockApi.Infrastructure.Queries.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Models.InputModels;
 using OzonEdu.StockApi.Models.ViewModels;
 
-[ApiController()]
-[Route("/api/[controller]")]
-public class DeliveryRequestController : Controller
+namespace OzonEdu.StockApi.Controllers.V1
 {
-    private readonly IMediator _mediator;
-
-    public DeliveryRequestController(IMediator mediator)
+    [ApiController()]
+    [Route("/api/[controller]")]
+    public class DeliveryRequestController : Controller
     {
-        _mediator = mediator;
-    }
+        private readonly IMediator _mediator;
 
-    [HttpGet()]
-    public async Task<List<DeliveryRequestViewModel>> GetAll(CancellationToken cancellationToken)
-    {
-        var result = await _mediator.Send(new GetDeliveryRequestsQuery()
+        public DeliveryRequestController(IMediator mediator)
         {
-            Status = DeliveryRequestStatus.All
-        }, cancellationToken);
-        return result.Items.Select(it => new DeliveryRequestViewModel(it)).ToList();
-    }
+            _mediator = mediator;
+        }
 
-    [HttpGet("inwork")]
-    public async Task<List<DeliveryRequestViewModel>> GetAllActive(CancellationToken cancellationToken)
-    {
-        var result = await _mediator.Send(new GetDeliveryRequestsQuery()
+        [HttpGet()]
+        public async Task<List<DeliveryRequestViewModel>> GetAll(CancellationToken cancellationToken)
         {
-            Status = DeliveryRequestStatus.InWork
-        }, cancellationToken);
-        return result.Items.Select(it => new DeliveryRequestViewModel(it)).ToList();
-    }
-
-    [HttpPost]
-    public async Task<int> Create([FromBody] CreateDeliveryRequestInputModel value,
-        CancellationToken cancellationToken)
-    {
-        return await _mediator.Send(new CreateDeliveryRequestCommand()
-        {
-            Items = value.Items.Select(it => new DeliveryRequestDto()
+            var result = await _mediator.Send(new GetDeliveryRequestsQuery()
             {
-                Quantity = it.Quantity,
-                Sku = it.Sku
-            }).ToList()
-        }, cancellationToken);
+                Status = DeliveryRequestStatus.All
+            }, cancellationToken);
+            return result.Items.Select(it => new DeliveryRequestViewModel(it)).ToList();
+        }
+
+        [HttpGet("inwork")]
+        public async Task<List<DeliveryRequestViewModel>> GetAllActive(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetDeliveryRequestsQuery()
+            {
+                Status = DeliveryRequestStatus.InWork
+            }, cancellationToken);
+            return result.Items.Select(it => new DeliveryRequestViewModel(it)).ToList();
+        }
+
+        [HttpPost]
+        public async Task<int> Create([FromBody] CreateDeliveryRequestInputModel value,
+            CancellationToken cancellationToken)
+        {
+            return await _mediator.Send(new CreateDeliveryRequestCommand()
+            {
+                Items = value.Items.Select(it => new DeliveryRequestDto()
+                {
+                    Quantity = it.Quantity,
+                    Sku = it.Sku
+                }).ToList()
+            }, cancellationToken);
+        }
     }
 }

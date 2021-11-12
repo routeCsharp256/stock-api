@@ -1,4 +1,4 @@
-﻿namespace OzonEdu.StockApi.Infrastructure.Handlers
+﻿namespace OzonEdu.StockApi.Infrastructure.Handlers.DeliveryRequestAggregate
 {
     public class GetDeliveryRequestsQueryHandler
     {

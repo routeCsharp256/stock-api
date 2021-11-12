@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using OzonEdu.StockApi.Infrastructure.Models;
 
-namespace OzonEdu.StockApi.Infrastructure.Queries.Responses
+namespace OzonEdu.StockApi.Infrastructure.Queries.DeliveryRequestAggregate.Responses
 {
     public class DeliveryRequestsQueryResponse : IItemsModel<DeliveryRequestItem>
     {
