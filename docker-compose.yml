@@ -8,7 +8,7 @@ services:
       - "5070:5080"
       - "5072:5082"
     environment:
-      DbConfiguration__ConnectionString: "Host=host.docker.internal;Port=5426;Database=stock-api;Username=postgres;Password=stockApiPassword"
+      DatabaseConnectionOptions__ConnectionString: "Host=host.docker.internal;Port=5426;Database=stock-api;Username=postgres;Password=stockApiPassword"
     depends_on:
       - stock-api-db
 

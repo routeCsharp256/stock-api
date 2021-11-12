@@ -21,7 +21,7 @@ namespace OzonEdu.StockApi.Migrator.Migrations
 
         public override void Down()
         {
-            Execute.Sql(" DROP TABLE if exists skus;");
+            Execute.Sql("DROP TABLE if exists skus;");
         }
     }
 }

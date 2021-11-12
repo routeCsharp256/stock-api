@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +17,7 @@ namespace OzonEdu.StockApi.Migrator
                 .AddEnvironmentVariables()
                 .Build();
             
-            var connectionString = configuration.GetSection("DbConfiguration:ConnectionString").Get<string>();
+            var connectionString = configuration.GetSection("DatabaseConnectionOptions:ConnectionString").Get<string>();
             var services = new ServiceCollection()
                 .AddFluentMigratorCore()
                 .ConfigureRunner(
