@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MediatR;
 using OzonEdu.StockApi.Grpc;
+using OzonEdu.StockApi.Infrastructure.Queries;
 
 namespace OzonEdu.StockApi.GrpcServices
 {
@@ -20,14 +22,36 @@ namespace OzonEdu.StockApi.GrpcServices
             Empty _,
             ServerCallContext context)
         {
-            // Использовать mediatr
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new GetAllStockItemsQuery(), context.CancellationToken);
+            return new GetAllStockItemsResponse()
+            {
+                Stocks = result.Items.Select(it => new GetAllStockItemsResponseUnit
+                {
+                    Quantity = it.Quantity,
+                    ItemId = it.ItemTypeId,
+                    ItemName = it.
+                }).ToList()
+            }
         }
 
-        public override Task<Empty> AddStockItem(AddStockItemRequest request, ServerCallContext context)
+        public override Task<ItemTypesResult> GetItemTypes(Empty request, ServerCallContext context)
         {
-            // Использовать mediatr
-            throw new NotImplementedException();
+            return base.GetItemTypes(request, context);
+        }
+
+        public override Task<Empty> GiveOutItems(GiveOutItemsRequest request, ServerCallContext context)
+        {
+            return base.GiveOutItems(request, context);
+        }
+
+        public override Task<StockItemsAvailabilityResponse> GetByItemType(IntIdModel request, ServerCallContext context)
+        {
+            return base.GetByItemType(request, context);
+        }
+
+        public override Task<StockItemsAvailabilityResponse> GetStockItemsAvailability(SkusRequest request, ServerCallContext context)
+        {
+            return base.GetStockItemsAvailability(request, context);
         }
     }
 }

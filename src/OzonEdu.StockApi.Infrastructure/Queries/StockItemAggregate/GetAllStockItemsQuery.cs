@@ -1,6 +1,9 @@
-﻿namespace OzonEdu.StockApi.Infrastructure.Queries
+﻿using MediatR;
+using OzonEdu.StockApi.Infrastructure.Queries.Responses;
+
+namespace OzonEdu.StockApi.Infrastructure.Queries
 {
-    public class GetAllStockItemsQuery
+    public class GetAllStockItemsQuery : IRequest<GetAllStockItemsQueryResponse>
     {
         
     }
