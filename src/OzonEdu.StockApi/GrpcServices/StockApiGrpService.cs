@@ -31,7 +31,6 @@ namespace OzonEdu.StockApi.GrpcServices
                     response.Items.Select(
                         it => new StockItemUnit
                         {
-                            Id = it.Id,
                             Quantity = it.Quantity,
                             Sku = it.Sku,
                             ItemName = it.Name,
@@ -90,7 +89,6 @@ namespace OzonEdu.StockApi.GrpcServices
                     result.Items.Select(
                         it => new StockItemUnit
                         {
-                            Id = it.Id,
                             Quantity = it.Quantity,
                             Sku = it.Sku,
                             ItemName = it.Name,

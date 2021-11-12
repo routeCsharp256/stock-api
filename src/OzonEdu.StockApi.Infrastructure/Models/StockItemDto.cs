@@ -6,11 +6,6 @@
     public class StockItemDto
     {
         /// <summary>
-        /// Идентификатор
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
         /// Код товарной позиции
         /// </summary>
         public long Sku { get; set; }
