@@ -3,14 +3,12 @@ using System.Diagnostics.CodeAnalysis;
 namespace OzonEdu.StockApi.Infrastructure.Repositories.Models
 {
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    public class Sku
+    public class DeliveryRequest
     {
         public long Id { get; set; }
         
-        public string Name { get; set; }
-
-        public int ItemTypeId { get; set; }
-
-        public int ClothingSize { get; set; }
+        public long RequestId { get; set; }
+        
+        public int RequestStatus { get; set; }
     }
 }

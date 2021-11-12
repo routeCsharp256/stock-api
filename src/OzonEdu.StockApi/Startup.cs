@@ -25,7 +25,8 @@ namespace OzonEdu.StockApi
         }
         
 		public void ConfigureServices(IServiceCollection services)
-        {
+		{
+			Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 	        services.AddMediatR(typeof(Startup));
 	        services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
 	        
@@ -35,7 +36,10 @@ namespace OzonEdu.StockApi
 	        
 	        services.AddScoped<IStockItemRepository, StockItemRepository>();
 	        services.AddScoped<IDeliveryRequestRepository, DeliveryRequestRepository>();
-        }
+	        
+	        // Для демонстрации.
+	        services.AddScoped<IItemTypeRepository, ItemTypeRepository>();
+		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{

@@ -92,12 +92,16 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
 
         public void SetClothingSize(ClothingSize size)
         {
-            if (size is not null && (
-                ItemType.Type.Equals(StockItemAggregate.ItemType.TShirt) ||
-                ItemType.Type.Equals(StockItemAggregate.ItemType.Sweatshirt)))
+            if (size is not null &&
+                (ItemType.Type.Equals(StockItemAggregate.ItemType.TShirt) ||
+                    ItemType.Type.Equals(StockItemAggregate.ItemType.Sweatshirt)))
+            {
                 ClothingSize = size;
+            }
             else if (size is null)
+            {
                 ClothingSize = null;
+            }
             else
             {
                 throw new StockItemSizeException($"Item with type {ItemType.Type.Name} cannot get size");    

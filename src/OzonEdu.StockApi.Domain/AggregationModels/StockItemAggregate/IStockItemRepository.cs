@@ -22,9 +22,9 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
         /// <summary>
         /// Найти товарную позицию по складскому идентфикатору
         /// </summary>
-        /// <param name="sku">Складской идентификатор товарной позиции</param>
+        /// <param name="skus">Складской идентификатор товарной позиции</param>
         /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
         /// <returns>Товарная позиция</returns>
-        Task<IReadOnlyList<StockItem>> FindBySkusAsync(IReadOnlyList<Sku> sku, CancellationToken cancellationToken);
+        Task<IReadOnlyList<StockItem>> FindBySkusAsync(IReadOnlyList<Sku> skus, CancellationToken cancellationToken);
     }
 }
