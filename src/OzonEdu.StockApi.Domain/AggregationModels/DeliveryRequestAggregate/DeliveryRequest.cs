@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using OzonEdu.StockApi.Domain.AggregatesModels.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.ValueObjects;
 using OzonEdu.StockApi.Domain.Exceptions.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Domain.Models;
@@ -12,7 +11,8 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
     /// </summary>
     public class DeliveryRequest : Entity
     {
-        public DeliveryRequest(RequestNumber requestNumber,
+        public DeliveryRequest(
+            RequestNumber requestNumber,
             RequestStatus requestStatus,
             IReadOnlyList<Sku> skuCollection)
         {
@@ -48,7 +48,7 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
         /// <exception cref="Exception"></exception>
         public void ChangeStatus(RequestStatus status)
         {
-            if (RequestStatus.Equals(AggregatesModels.DeliveryRequestAggregate.RequestStatus.Done))
+            if (RequestStatus.Equals(RequestStatus.Done))
                 throw new DeliveryRequestStatusException($"Request in done. Change status unavailable");
             
             RequestStatus = status;

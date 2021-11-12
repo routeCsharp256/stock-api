@@ -1,12 +1,10 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OzonEdu.StockApi.HttpModels;
-using OzonEdu.StockApi.Infrastructure.Commands;
-using OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate;
-using OzonEdu.StockApi.Services.Interfaces;
-using StockItem = OzonEdu.StockApi.Models.StockItem;
+using OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem;
 
 namespace OzonEdu.StockApi.Controllers.V1
 {
@@ -15,44 +13,32 @@ namespace OzonEdu.StockApi.Controllers.V1
     [Produces("application/json")]
     public class StockController : ControllerBase
     {
-        private readonly IStockService _stockService;
         private readonly IMediator _mediator;
 
-        public StockController(IStockService stockService, IMediator mediator)
+        public StockController(IMediator mediator)
         {
-            _stockService = stockService;
             _mediator = mediator;
         }
         
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken token)
         {
-            var stockItems = await _stockService.GetAll(token);
-            return Ok(stockItems);
+            // use mediator
+            throw new NotSupportedException();
         }
         
         [HttpGet("{id:long}")]
-        public async Task<ActionResult<StockItem>> GetById(long id, CancellationToken token)
+        public async Task<IActionResult> GetById(long id, CancellationToken token)
         {
-            var stockItem = await _stockService.GetById(id, token);
-            if (stockItem is null)
-            {
-                return NotFound();
-            }
-
-            return stockItem;
+            // use mediator
+            throw new NotSupportedException();
         }
 
         [HttpGet("quantity/{sku:long}")]
-        public async Task<ActionResult<int>> GetAvailableQuantity(long sku, CancellationToken cancellationToken)
+        public async Task<ActionResult<int>> GetAvailableQuantity(long sku, CancellationToken token)
         {
-            var query = new GetAvailableQuantityQuery()
-            {
-                Sku = sku
-            };
-            var result = await _mediator.Send(query, cancellationToken);
-            
-            return result;
+            // use mediator
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -61,7 +47,7 @@ namespace OzonEdu.StockApi.Controllers.V1
         [HttpPost]
         public async Task<ActionResult<int>> Add(StockItemPostViewModel postViewModel, CancellationToken token)
         {
-            var createStockItemCommand = new CreateStockItemCommand()
+            var createStockItemCommand = new CreateStockItemCommand
             {
                 Name = postViewModel.Name,
                 Quantity = postViewModel.Quantity,
@@ -71,9 +57,7 @@ namespace OzonEdu.StockApi.Controllers.V1
                 MinimalQuantity = postViewModel.MinimalQuantity,
                 StockItemType = postViewModel.StockItemType
             };
-
             var result = await _mediator.Send(createStockItemCommand, token);
-            
             return Ok(result);
         }
     }

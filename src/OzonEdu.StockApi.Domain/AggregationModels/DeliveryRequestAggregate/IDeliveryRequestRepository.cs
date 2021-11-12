@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using OzonEdu.StockApi.Domain.AggregatesModels.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Domain.Contracts;
 
 namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
