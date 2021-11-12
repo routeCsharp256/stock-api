@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using OzonEdu.StockApi.Infrastructure.Queries.Responses;
+using OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate.Responses;
 
-namespace OzonEdu.StockApi.Infrastructure.Queries
+namespace OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate
 {
     public class GetItemTypesQuery : IRequest<GetItemTypesQueryResponse>
     {
