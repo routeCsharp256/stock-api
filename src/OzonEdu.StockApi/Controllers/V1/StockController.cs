@@ -2,11 +2,15 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Dapper;
 using MediatR;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Mvc;
+using Npgsql;
 using OzonEdu.StockApi.HttpModels;
 using OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem;
 using OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate;
+using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace OzonEdu.StockApi.Controllers.V1
 {
@@ -16,10 +20,12 @@ namespace OzonEdu.StockApi.Controllers.V1
     public class StockController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IDbConnectionFactory<NpgsqlConnection> _factory;
 
-        public StockController(IMediator mediator)
+        public StockController(IMediator mediator, IDbConnectionFactory<NpgsqlConnection> factory)
         {
             _mediator = mediator;
+            _factory = factory;
         }
 
         [HttpGet]
@@ -69,6 +75,13 @@ namespace OzonEdu.StockApi.Controllers.V1
             };
             var result = await _mediator.Send(createStockItemCommand, token);
             return Ok(result);
+        }
+
+        [HttpGet("item-type-id-by-name/{name}")]
+        public async Task<long> GetItemTypeIdByName([FromRoute] string name, CancellationToken cancellationToken)
+        {
+            var connection = await _factory.CreateConnection(cancellationToken);
+            return await connection.QuerySingleAsync<long>($"SELECT id from item_types WHERE name = {name}");
         }
     }
 }
