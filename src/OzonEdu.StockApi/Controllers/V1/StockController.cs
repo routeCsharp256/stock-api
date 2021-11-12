@@ -40,12 +40,12 @@ namespace OzonEdu.StockApi.Controllers.V1
         [HttpGet("quantity")]
         public async Task<StockItemQuantityModel[]> GetAvailableQuantity([FromBody] long[] sku, CancellationToken token)
         {
-            var result = await _mediator.Send(new GetStockItemsAvailableQuantityQuery()
+            var result = await _mediator.Send(new GetStockItemsAvailableQuantityQuery
             {
                 Skus = sku
             }, token);
 
-            return result.Items.Select(it => new StockItemQuantityModel()
+            return result.Items.Select(it => new StockItemQuantityModel
             {
                 Sku = it.Sku,
                 Quantity = it.Quantity

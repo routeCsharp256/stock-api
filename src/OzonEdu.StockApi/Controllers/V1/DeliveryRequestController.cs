@@ -26,7 +26,7 @@ namespace OzonEdu.StockApi.Controllers.V1
         [HttpGet()]
         public async Task<List<DeliveryRequestViewModel>> GetAll(CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetDeliveryRequestsQuery()
+            var result = await _mediator.Send(new GetDeliveryRequestsQuery
             {
                 Status = DeliveryRequestStatus.All
             }, cancellationToken);
@@ -36,7 +36,7 @@ namespace OzonEdu.StockApi.Controllers.V1
         [HttpGet("inwork")]
         public async Task<List<DeliveryRequestViewModel>> GetAllActive(CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetDeliveryRequestsQuery()
+            var result = await _mediator.Send(new GetDeliveryRequestsQuery
             {
                 Status = DeliveryRequestStatus.InWork
             }, cancellationToken);
@@ -47,9 +47,9 @@ namespace OzonEdu.StockApi.Controllers.V1
         public async Task<int> Create([FromBody] CreateDeliveryRequestInputModel value,
             CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new CreateDeliveryRequestCommand()
+            return await _mediator.Send(new CreateDeliveryRequestCommand
             {
-                Items = value.Items.Select(it => new DeliveryRequestDto()
+                Items = value.Items.Select(it => new DeliveryRequestDto
                 {
                     Quantity = it.Quantity,
                     Sku = it.Sku
