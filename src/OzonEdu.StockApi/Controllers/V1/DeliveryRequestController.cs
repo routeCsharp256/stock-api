@@ -4,16 +4,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OzonEdu.StockApi.HttpModels;
 using OzonEdu.StockApi.Infrastructure.Commands.CreateDeliveryRequest;
 using OzonEdu.StockApi.Infrastructure.Models;
 using OzonEdu.StockApi.Infrastructure.Queries.DeliveryRequestAggregate;
-using OzonEdu.StockApi.Models.InputModels;
-using OzonEdu.StockApi.Models.ViewModels;
 
 namespace OzonEdu.StockApi.Controllers.V1
 {
-    [ApiController()]
-    [Route("/api/[controller]")]
+    [ApiController]
+    [Route("v1/api/delivery-requests")]
+    [Produces("application/json")]
     public class DeliveryRequestController : Controller
     {
         private readonly IMediator _mediator;
@@ -23,38 +23,59 @@ namespace OzonEdu.StockApi.Controllers.V1
             _mediator = mediator;
         }
 
-        [HttpGet()]
+        [HttpGet]
         public async Task<List<DeliveryRequestViewModel>> GetAll(CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetDeliveryRequestsQuery()
+            var result = await _mediator.Send(
+                new GetDeliveryRequestsQuery
+                {
+                    Status = DeliveryRequestStatus.All
+                },
+                cancellationToken);
+            return result.Items.Select(it => new DeliveryRequestViewModel
             {
-                Status = DeliveryRequestStatus.All
-            }, cancellationToken);
-            return result.Items.Select(it => new DeliveryRequestViewModel(it)).ToList();
+                Id = it.Id,
+                RequestStatus = (int)it.RequestStatus, // TODO: Исправить.
+                DeliveryRequestId = it.DeliveryRequestId,
+                SkusCollection = it.SkusCollection
+            }).ToList();
         }
 
         [HttpGet("inwork")]
         public async Task<List<DeliveryRequestViewModel>> GetAllActive(CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetDeliveryRequestsQuery()
+            var result = await _mediator.Send(
+                new GetDeliveryRequestsQuery
+                {
+                    Status = DeliveryRequestStatus.InWork
+                },
+                cancellationToken);
+            return result.Items.Select(it => new DeliveryRequestViewModel
             {
-                Status = DeliveryRequestStatus.InWork
-            }, cancellationToken);
-            return result.Items.Select(it => new DeliveryRequestViewModel(it)).ToList();
+                Id = it.Id,
+                RequestStatus = (int)it.RequestStatus, // TODO: Исправить.
+                DeliveryRequestId = it.DeliveryRequestId,
+                SkusCollection = it.SkusCollection
+            }).ToList();
         }
 
         [HttpPost]
-        public async Task<int> Create([FromBody] CreateDeliveryRequestInputModel value,
+        public async Task<int> Create(
+            CreateDeliveryRequestInputModel value,
             CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new CreateDeliveryRequestCommand()
-            {
-                Items = value.Items.Select(it => new DeliveryRequestDto()
+            return await _mediator.Send(
+                new CreateDeliveryRequestCommand
                 {
-                    Quantity = it.Quantity,
-                    Sku = it.Sku
-                }).ToList()
-            }, cancellationToken);
+                    Items = value.Items.Select(
+                            it => new DeliveryRequestDto
+                            {
+                                Quantity = it.Quantity,
+                                Sku = it.Sku
+                            })
+                        .ToList()
+                },
+                cancellationToken);
         }
     }
 }

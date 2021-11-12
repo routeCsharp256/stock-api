@@ -42,7 +42,7 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
     // delivery_requests_id - bigint -- составной ключ
     // sku_id - bigint -- составной ключ
 
-    public class StockItem : Entity
+    public class StockItem : Entity, IAggregationRoot
     {
         public StockItem(Sku sku,
             Name name,

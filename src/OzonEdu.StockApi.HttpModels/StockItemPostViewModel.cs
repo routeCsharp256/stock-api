@@ -1,6 +1,6 @@
 namespace OzonEdu.StockApi.HttpModels
 {
-    public class StockItemPostViewModel
+    public record StockItemPostViewModel
     {
         /// <summary>
         /// Идентификатор нового товара

@@ -1,7 +1,7 @@
 namespace OzonEdu.StockApi.HttpModels
 {
-    public class AvailableQuantity
+    public record AvailableQuantity
     {
-        public int Value { get; set; }
+        public int Value { get; init; }
     }
 }

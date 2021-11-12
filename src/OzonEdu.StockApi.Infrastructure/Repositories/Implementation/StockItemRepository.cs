@@ -85,11 +85,13 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
             const string sql = @"
                 SELECT skus.id, skus.name, skus.item_type_id, skus.clothing_size,
                        stocks.sku_id, stocks.quantity, stocks.minimal_quantity,
-                       item_types.id, item_types.name
+                       item_types.id, item_types.name,
+                       clothing_sizes.id, clothing_sizes.name
                 FROM skus
                 INNER JOIN stocks on stocks.sku_id = skus.id
                 INNER JOIN item_types on item_types.id = skus.item_type_id
-                WHERE id = @SkuId;";
+                LEFT JOIN clothing_sizes on clothing_sizes.id = skus.clothing_size
+                WHERE skus.id = @SkuId;";
             
             var parameters = new
             {
@@ -121,11 +123,13 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
             const string sql = @"
                 SELECT skus.id, skus.name, skus.item_type_id, skus.clothing_size,
                        stocks.sku_id, stocks.quantity, stocks.minimal_quantity,
-                       item_types.id, item_types.name
+                       item_types.id, item_types.name,
+                       clothing_sizes.id, clothing_sizes.name
                 FROM skus
                 INNER JOIN stocks on stocks.sku_id = skus.id
                 INNER JOIN item_types on item_types.id = skus.item_type_id
-                WHERE id = ANY(@SkuIds);";
+                LEFT JOIN clothing_sizes on clothing_sizes.id = skus.clothing_size
+                WHERE skus.id = ANY(@SkuIds);";
             
             var parameters = new
             {

@@ -5,10 +5,8 @@ using Grpc.Core;
 using MediatR;
 using OzonEdu.StockApi.Grpc;
 using OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate;
-using OzonEdu.StockApi.Infrastructure.Commands;
 using OzonEdu.StockApi.Infrastructure.Commands.GiveOutStockItem;
 using OzonEdu.StockApi.Infrastructure.Models;
-using OzonEdu.StockApi.Infrastructure.Queries;
 
 namespace OzonEdu.StockApi.GrpcServices
 {
@@ -46,61 +44,86 @@ namespace OzonEdu.StockApi.GrpcServices
         public override async Task<ItemTypesResult> GetItemTypes(Empty request, ServerCallContext context)
         {
             var response = await _mediator.Send(new GetItemTypesQuery(), context.CancellationToken);
-            var result = new ItemTypesResult();
-            result.Items.AddRange(response.Items.Select(it => new ItemTypeModel
+            return new ItemTypesResult
             {
-                Id = it.Id,
-                Name = it.Name
-            }));
-            return result;
+                Items =
+                {
+                    response.Items.Select(
+                        it => new ItemTypeModel
+                        {
+                            Id = it.Id,
+                            Name = it.Name
+                        })
+                }
+            };
         }
 
         public override async Task<Empty> GiveOutItems(GiveOutItemsRequest request, ServerCallContext context)
         {
-            var response = await _mediator.Send(new GiveOutStockItemCommand()
-            {
-                Items = request.Items.Select(it => new StockItemQuantityDto()
+            await _mediator.Send(
+                new GiveOutStockItemCommand
                 {
-                    Quantity = it.Quantity,
-                    Sku = it.Sku
-                }).ToList()
-            }, context.CancellationToken);
+                    Items = request.Items.Select(
+                            it => new StockItemQuantityDto
+                            {
+                                Quantity = it.Quantity,
+                                Sku = it.Sku
+                            })
+                        .ToList()
+                },
+                context.CancellationToken);
             return new Empty();
         }
 
         public override async Task<StockItemsResponse> GetByItemType(IntIdModel request, ServerCallContext context)
         {
-            var response = await _mediator.Send(new GetByItemTypeQuery()
-            {
-                Id = request.Id
-            }, context.CancellationToken);
-            var result = new StockItemsResponse();
-            result.Items.AddRange(response.Items.Select(it => new StockItemUnit()
+            var result = await _mediator.Send(
+                new GetByItemTypeQuery
                 {
-                    Id = it.Id,
-                    Quantity = it.Quantity,
-                    Sku = it.Sku,
-                    ItemName = it.Name,
-                    ItemTypeId = it.ItemTypeId
+                    Id = request.Id
+                },
+                context.CancellationToken);
+            return new StockItemsResponse
+            {
+                Items =
+                {
+                    result.Items.Select(
+                        it => new StockItemUnit
+                        {
+                            Id = it.Id,
+                            Quantity = it.Quantity,
+                            Sku = it.Sku,
+                            ItemName = it.Name,
+                            ItemTypeId = it.ItemTypeId
+                        }
+                    )
                 }
-            ).ToList());
-            return result;
+            };
         }
 
-        public override async Task<StockItemsAvailabilityResponse> GetStockItemsAvailability(SkusRequest request, ServerCallContext context)
+        public override async Task<StockItemsAvailabilityResponse> GetStockItemsAvailability(
+            SkusRequest request,
+            ServerCallContext context)
         {
-            var response = await _mediator.Send(new GetStockItemsAvailableQuantityQuery()
-            {
-                Skus = request.Skus
-            }, context.CancellationToken);
-            var result = new StockItemsAvailabilityResponse();
-            result.Items.AddRange(response.Items.Select(it => new SkuQuantityItem()
+            var result = await _mediator.Send(
+                new GetStockItemsAvailableQuantityQuery
                 {
-                    Quantity = it.Quantity,
-                    Sku = it.Sku,
+                    Skus = request.Skus
+                },
+                context.CancellationToken);
+            return new StockItemsAvailabilityResponse
+            {
+                Items =
+                {
+                    result.Items.Select(
+                        it => new SkuQuantityItem
+                        {
+                            Quantity = it.Quantity,
+                            Sku = it.Sku,
+                        }
+                    )
                 }
-            ).ToList());
-            return result;
+            };
         }
     }
 }
