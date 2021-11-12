@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using MediatR;
 using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
-using OzonEdu.StockApi.Infrastructure.Queries;
-using OzonEdu.StockApi.Infrastructure.Queries.Responses;
+using OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate;
+using OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate.Responses;
 
-namespace OzonEdu.StockApi.Infrastructure.Handlers
+namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
 {
     public class GetStockItemsAvailableQuantityQueryHandler : IRequestHandler<GetStockItemsAvailableQuantityQuery, GetStockItemsAvailableQuantityQueryResponse>
     {

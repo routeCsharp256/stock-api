@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -113,6 +114,45 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
             var stockItem = stockItems.First();
             _changeTracker.Track(stockItem);
             return stockItem;
+        }
+
+        public async Task<IReadOnlyList<StockItem>> FindBySkusAsync(IReadOnlyList<Sku> sku, CancellationToken cancellationToken)
+        {
+            const string sql = @"
+                SELECT skus.id, skus.name, skus.item_type_id, skus.clothing_size,
+                       stocks.sku_id, stocks.quantity, stocks.minimal_quantity,
+                       item_types.id, item_types.name
+                FROM skus
+                INNER JOIN stocks on stocks.sku_id = skus.id
+                INNER JOIN item_types on item_types.id = skus.item_type_id
+                WHERE id = ANY(@SkuIds);";
+            
+            var parameters = new
+            {
+                SkuIds = sku.Select(x => x.Value).ToArray(),
+            };
+            var commandDefinition = new CommandDefinition(
+                sql,
+                parameters: parameters,
+                commandTimeout: Timeout,
+                cancellationToken: cancellationToken);
+            var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
+            var stockItems = await connection.QueryAsync<
+                Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(commandDefinition,
+                (sku, stock, itemType, clothingSize) => new StockItem(
+                    new Sku(sku.Id),
+                    new Name(sku.Name),
+                    new Item(new ItemType(itemType.Id, itemType.Name)),
+                    new ClothingSize(clothingSize.Id, clothingSize.Name),
+                    new Quantity(stock.Quantity),
+                    new QuantityValue(stock.MinimalQuantity)));
+            var result = stockItems.ToList();
+            foreach (var stockItem in result)
+            {
+                _changeTracker.Track(stockItem);
+            }
+
+            return result;
         }
     }
 }

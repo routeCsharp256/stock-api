@@ -5,6 +5,5 @@ namespace OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate
 {
     public class GetAllStockItemsQuery : IRequest<GetAllStockItemsQueryResponse>
     {
-        
     }
 }
