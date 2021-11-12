@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using MediatR;
 
 namespace OzonEdu.StockApi.Models.InputModels
 {

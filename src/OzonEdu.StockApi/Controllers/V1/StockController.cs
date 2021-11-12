@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OzonEdu.StockApi.HttpModels;
-using OzonEdu.StockApi.Infrastructure.Commands;
-using OzonEdu.StockApi.Infrastructure.Queries;
+using OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem;
+using OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate;
 using OzonEdu.StockApi.Models;
 
 namespace OzonEdu.StockApi.Controllers.V1

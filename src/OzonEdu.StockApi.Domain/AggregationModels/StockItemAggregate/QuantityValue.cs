@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using OzonEdu.StockApi.Domain.Models;
 
 namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
 {
-    public class Quantity : ValueObject
+    public class QuantityValue : ValueObject
     {
-        public Quantity(int value)
+        public QuantityValue(int? value)
         {
             Value = value;
         }
 
-        public int Value { get; }
+        public int? Value { get; }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {

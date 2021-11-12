@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using OzonEdu.StockApi.Infrastructure.Models;
-using OzonEdu.StockApi.Infrastructure.Queries;
 
 namespace OzonEdu.StockApi.Models.ViewModels
 {

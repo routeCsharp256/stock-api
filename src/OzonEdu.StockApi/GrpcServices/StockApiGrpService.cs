@@ -1,11 +1,10 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MediatR;
 using OzonEdu.StockApi.Grpc;
-using OzonEdu.StockApi.Infrastructure.Queries;
+using OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate;
 
 namespace OzonEdu.StockApi.GrpcServices
 {
@@ -25,13 +24,20 @@ namespace OzonEdu.StockApi.GrpcServices
             var result = await _mediator.Send(new GetAllStockItemsQuery(), context.CancellationToken);
             return new GetAllStockItemsResponse()
             {
-                Stocks = result.Items.Select(it => new GetAllStockItemsResponseUnit
+                Stocks =
                 {
-                    Quantity = it.Quantity,
-                    ItemId = it.ItemTypeId,
-                    ItemName = it.
-                }).ToList()
-            }
+                    result.Items.Select(
+                            it => new GetAllStockItemsResponseUnit
+                            {
+                                Quantity = it.Quantity,
+                                Sku = it.Sku,
+                                ItemTypeId = it.ItemTypeId,
+                                ItemName = it.Name,
+                                Id = it.Id
+                            })
+                        .ToList()
+                }
+            };
         }
 
         public override Task<ItemTypesResult> GetItemTypes(Empty request, ServerCallContext context)

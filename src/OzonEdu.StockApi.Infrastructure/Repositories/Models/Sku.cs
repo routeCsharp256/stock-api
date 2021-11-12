@@ -24,14 +24,14 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Models
 
     public class ItemType
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         
         public string Name { get; set; }
     }
 
     public class ClothingSize
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         
         public string Name { get; set; }
     }
