@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -22,15 +22,17 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
 
         public async Task<Unit> Handle(GiveOutStockItemCommand request, CancellationToken cancellationToken)
         {
+            // Создать метод по нескольким
             await _unitOfWork.StartTransaction(cancellationToken);
-            var stockItem = await _stockItemRepository.FindBySkuAsync(new Sku(request.Sku), cancellationToken);
-            if (stockItem is null)
-                throw new Exception($"Not found with sku {request.Sku}");
+            var stockItems = await _stockItemRepository.FindBySkusAsync(request.Items.Select(it => new Sku(it.Sku)).ToList(), cancellationToken);
 
-            stockItem.GiveOutItems(request.Quantity);
-            await _stockItemRepository.UpdateAsync(stockItem, cancellationToken);
+            foreach (var stockItem in stockItems)
+            {
+                stockItem.GiveOutItems(request.Items.FirstOrDefault(it => it.Sku.Equals(stockItem.Sku.Value))?.Quantity ?? 0);
+                await _stockItemRepository.UpdateAsync(stockItem, cancellationToken);
+            }
+            
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
             return Unit.Value;
         }
     }
