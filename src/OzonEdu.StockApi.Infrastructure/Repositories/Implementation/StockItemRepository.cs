@@ -55,7 +55,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
             const string sql = @"
                 UPDATE skus
                 SET name = @Name, item_type_id = @ItemTypeId, clothing_size = @ClothingSize
-                WHERE sku_id = @SkuId;
+                WHERE id = @SkuId;
                 UPDATE stocks
                 SET quantity = @Quantity, minimal_quantity = @MinimalQuantity
                 WHERE sku_id = @SkuId;";
@@ -121,10 +121,10 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
         public async Task<IReadOnlyList<StockItem>> FindBySkusAsync(IReadOnlyList<Sku> sku, CancellationToken cancellationToken)
         {
             const string sql = @"
-                SELECT skus.id, skus.name, skus.item_type_id, skus.clothing_size,
-                       stocks.sku_id, stocks.quantity, stocks.minimal_quantity,
-                       item_types.id, item_types.name,
-                       clothing_sizes.id, clothing_sizes.name
+                SELECT skus.*,
+                       stocks.*,
+                       item_types.*,
+                       clothing_sizes.*
                 FROM skus
                 INNER JOIN stocks on stocks.sku_id = skus.id
                 INNER JOIN item_types on item_types.id = skus.item_type_id

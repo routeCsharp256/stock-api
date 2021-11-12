@@ -26,6 +26,7 @@ namespace OzonEdu.StockApi
         
 		public void ConfigureServices(IServiceCollection services)
         {
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 	        services.AddMediatR(typeof(Startup), typeof(DatabaseConnectionOptions));
 	        services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
 	        

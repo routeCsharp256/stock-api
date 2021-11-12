@@ -78,13 +78,13 @@ namespace OzonEdu.StockApi.Infrastructure.Extensions
             var httpPortEnv = Environment.GetEnvironmentVariable("HTTP_PORT");
             if (!int.TryParse(httpPortEnv, out var httpPort))
             {
-                httpPort = 5080;
+                httpPort = 5000;
             }
 
             var grpcPortEnv = Environment.GetEnvironmentVariable("GRPC_PORT");
             if (!int.TryParse(grpcPortEnv, out var grpcPort))
             {
-                grpcPort = 5082;
+                grpcPort = 5002;
             }
             builder.ConfigureWebHostDefaults(webBuilder =>
             {

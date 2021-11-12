@@ -12,9 +12,9 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
         // Можно заменить на любую другую имплементацию. Не только через ConcurrentBag
         private readonly ConcurrentBag<Entity> _usedEntitiesBackingField;
 
-        public ChangeTracker(ConcurrentBag<Entity> usedEntitiesBackingField)
+        public ChangeTracker()
         {
-            _usedEntitiesBackingField = usedEntitiesBackingField;
+            _usedEntitiesBackingField = new ConcurrentBag<Entity>();
         }
         
         public void Track(Entity entity)

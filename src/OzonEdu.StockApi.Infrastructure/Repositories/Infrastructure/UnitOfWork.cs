@@ -19,7 +19,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
         private readonly IPublisher _publisher;
         private readonly IChangeTracker _changeTracker;
 
-        internal UnitOfWork(
+        public UnitOfWork(
             IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory,
             IPublisher publisher,
             IChangeTracker changeTracker)
@@ -35,8 +35,8 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
             {
                 return;
             }
-        
-            _npgsqlTransaction = await _dbConnectionFactory.Connection.BeginTransactionAsync(token);
+            var connection = await _dbConnectionFactory.CreateConnection(token);
+            _npgsqlTransaction = await connection.BeginTransactionAsync(token);
         }
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken)
