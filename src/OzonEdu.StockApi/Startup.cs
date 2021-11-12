@@ -36,7 +36,10 @@ namespace OzonEdu.StockApi
 	        
 	        services.AddScoped<IStockItemRepository, StockItemRepository>();
 	        services.AddScoped<IDeliveryRequestRepository, DeliveryRequestRepository>();
-        }
+	        
+	        // Для демонстрации.
+	        services.AddScoped<IItemTypeRepository, ItemTypeRepository>();
+		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{

@@ -84,7 +84,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
         {
             const string sql = @"
                 SELECT skus.id, skus.name, skus.item_type_id, skus.clothing_size,
-                       stocks.sku_id, stocks.quantity, stocks.minimal_quantity,
+                       stocks.id, stocks.sku_id, stocks.quantity, stocks.minimal_quantity,
                        item_types.id, item_types.name,
                        clothing_sizes.id, clothing_sizes.name
                 FROM skus
@@ -105,11 +105,11 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
             var stockItems = await connection.QueryAsync<
                 Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(commandDefinition,
-                (sku, stock, itemType, clothingSize) => new StockItem(
-                    new Sku(sku.Id),
-                    new Name(sku.Name),
+                (skuModel, stock, itemType, clothingSize) => new StockItem(
+                    new Sku(skuModel.Id),
+                    new Name(skuModel.Name),
                     new Item(new ItemType(itemType.Id, itemType.Name)),
-                    new ClothingSize(clothingSize.Id, clothingSize.Name),
+                    clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
                     new Quantity(stock.Quantity),
                     new QuantityValue(stock.MinimalQuantity)));
             // Добавление после успешно выполненной операции.
@@ -117,7 +117,8 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
             _changeTracker.Track(stockItem);
             return stockItem;
         }
-        public async Task<IReadOnlyList<StockItem>> GetAllAsync(CancellationToken cancellationToken)
+
+        public async Task<IReadOnlyList<StockItem>> FindBySkusAsync(IReadOnlyList<Sku> skus, CancellationToken cancellationToken)
         {
             const string sql = @"
                 SELECT skus.id, skus.name, skus.item_type_id, skus.clothing_size,
@@ -127,47 +128,12 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 FROM skus
                 INNER JOIN stocks on stocks.sku_id = skus.id
                 INNER JOIN item_types on item_types.id = skus.item_type_id
-                LEFT JOIN clothing_sizes on clothing_sizes.id = skus.clothing_size;";
-            
-            var commandDefinition = new CommandDefinition(
-                sql,
-                commandTimeout: Timeout,
-                cancellationToken: cancellationToken);
-            var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var stockItems = await connection.QueryAsync<
-                Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(commandDefinition,
-                (sku, stock, itemType, clothingSize) => new StockItem(
-                    new Sku(sku.Id),
-                    new Name(sku.Name),
-                    new Item(new ItemType(itemType.Id, itemType.Name)),
-                    new ClothingSize(clothingSize.Id, clothingSize.Name),
-                    new Quantity(stock.Quantity),
-                    new QuantityValue(stock.MinimalQuantity)));
-            
-            // Добавление после успешно выполненной операции.
-            foreach (var stockItem in stockItems)
-            {
-                _changeTracker.Track(stockItem);
-            }
-            return stockItems.ToList();
-        }
-
-        public async Task<IReadOnlyList<StockItem>> FindBySkusAsync(IReadOnlyList<Sku> sku, CancellationToken cancellationToken)
-        {
-            const string sql = @"
-                SELECT skus.*,
-                       stocks.*,
-                       item_types.*,
-                       clothing_sizes.*
-                FROM skus
-                INNER JOIN stocks on stocks.sku_id = skus.id
-                INNER JOIN item_types on item_types.id = skus.item_type_id
                 LEFT JOIN clothing_sizes on clothing_sizes.id = skus.clothing_size
                 WHERE skus.id = ANY(@SkuIds);";
             
             var parameters = new
             {
-                SkuIds = sku.Select(x => x.Value).ToArray(),
+                SkuIds = skus.Select(x => x.Value).ToArray(),
             };
             var commandDefinition = new CommandDefinition(
                 sql,
@@ -177,11 +143,11 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
             var stockItems = await connection.QueryAsync<
                 Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(commandDefinition,
-                (sku, stock, itemType, clothingSize) => new StockItem(
-                    new Sku(sku.Id),
-                    new Name(sku.Name),
+                (skuModel, stock, itemType, clothingSize) => new StockItem(
+                    new Sku(skuModel.Id),
+                    new Name(skuModel.Name),
                     new Item(new ItemType(itemType.Id, itemType.Name)),
-                    new ClothingSize(clothingSize.Id, clothingSize.Name),
+                    clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
                     new Quantity(stock.Quantity),
                     new QuantityValue(stock.MinimalQuantity)));
             var result = stockItems.ToList();
