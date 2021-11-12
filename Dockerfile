@@ -18,7 +18,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
 
 WORKDIR /app
 
-EXPOSE 80
+EXPOSE 5000
+EXPOSE 5002
 
 FROM runtime AS final
 WORKDIR /app
