@@ -5,51 +5,37 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Npgsql;
-using OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate;
-using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.Domain.Contracts;
 using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Exceptions;
 using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces;
 
 namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
 {
-    internal class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private NpgsqlTransaction _npgsqlTransaction;
         
         private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory = null;
         private readonly IPublisher _publisher;
-        private readonly IRepositoriesHolder _repositoriesHolder;
-        private readonly IEntitiesHolder _entitiesHolder;
+        private readonly IChangeTracker _changeTracker;
 
         internal UnitOfWork(
             IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory,
             IPublisher publisher,
-            IRepositoriesHolder repositoriesHolder,
-            IEntitiesHolder entitiesHolder)
+            IChangeTracker changeTracker)
         {
             _dbConnectionFactory = dbConnectionFactory;
             _publisher = publisher;
-            _repositoriesHolder = repositoriesHolder;
-            _entitiesHolder = entitiesHolder;
+            _changeTracker = changeTracker;
         }
 
-        public IDeliveryRequestRepository DeliveryRequestRepository => _repositoriesHolder.DeliveryRequestRepository;
-
-        public IStockItemRepository StockItemRepository => _repositoriesHolder.StockItemRepository;
-
-        public async Task CreateDbConnection(CancellationToken token)
-        {
-            await _dbConnectionFactory.CreateConnection(token);
-        }
-
-        public async ValueTask CreateTransaction(CancellationToken token)
+        public async ValueTask StartTransaction(CancellationToken token)
         {
             if (_npgsqlTransaction is not null)
             {
                 return;
             }
-
+        
             _npgsqlTransaction = await _dbConnectionFactory.Connection.BeginTransactionAsync(token);
         }
 
@@ -61,13 +47,13 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
             }
 
             var domainEvents = new Queue<INotification>(
-                _entitiesHolder.UsedEntities
-                    .SelectMany(x => x.DomainEvents));
-            foreach (var entity in _entitiesHolder.UsedEntities)
-            {
-                entity.ClearDomainEvents();
-            }
-
+                _changeTracker.TrackedEntities
+                    .SelectMany(x =>
+                    {
+                        var events = x.DomainEvents.ToList();
+                        x.ClearDomainEvents();
+                        return events;
+                    }));
             // Можно отправлять все и сразу через Task.WhenAll.
             while (domainEvents.TryDequeue(out var notification))
             {

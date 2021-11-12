@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
+using OzonEdu.StockApi.Domain.Contracts;
 using OzonEdu.StockApi.GrpcServices;
 using OzonEdu.StockApi.Infrastructure.Configuration;
 using OzonEdu.StockApi.Infrastructure.Repositories.Implementation;
@@ -27,10 +28,11 @@ namespace OzonEdu.StockApi
         {
 	        services.AddMediatR(typeof(Startup));
 	        services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
+	        
 	        services.AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
-	        services.AddScoped<IUnitOfWorkFactory, UnitOfWorkFactory>();
-	        services.AddScoped<IEntitiesHolder, EntitiesHolder>();
-	        services.AddScoped<IRepositoriesHolder, RepositoriesHolder>();
+	        services.AddScoped<IUnitOfWork, UnitOfWork>();
+	        services.AddScoped<IChangeTracker, ChangeTracker>();
+	        
 	        services.AddScoped<IStockItemRepository, StockItemRepository>();
 	        services.AddScoped<IDeliveryRequestRepository, DeliveryRequestRepository>();
         }

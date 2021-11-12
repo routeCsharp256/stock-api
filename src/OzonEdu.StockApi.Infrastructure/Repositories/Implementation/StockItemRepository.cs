@@ -11,13 +11,13 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
     public class StockItemRepository : IStockItemRepository
     {
         private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory;
-        private readonly IEntitiesHolder _entitiesHolder;
+        private readonly IChangeTracker _changeTracker;
         private const int Timeout = 5;
 
-        public StockItemRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IEntitiesHolder entitiesHolder)
+        public StockItemRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IChangeTracker changeTracker)
         {
             _dbConnectionFactory = dbConnectionFactory;
-            _entitiesHolder = entitiesHolder;
+            _changeTracker = changeTracker;
         }
 
         public async Task<StockItem> CreateAsync(StockItem itemToCreate, CancellationToken cancellationToken = default)
@@ -26,20 +26,21 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 "",
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
-            await _dbConnectionFactory.Connection.ExecuteAsync(commandDefinition);
+            var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
+            await connection.ExecuteAsync(commandDefinition);
             // Добавление после успешно выполненной операции.
-            _entitiesHolder.Hold(itemToCreate);
+            _changeTracker.Track(itemToCreate);
             return itemToCreate;
         }
 
-        public Task<StockItem> UpdateAsync(StockItem itemToUpdate, CancellationToken cancellationToken = default)
+        public Task<StockItem> UpdateAsync(StockItem itemToUpdate, CancellationToken cancellationToken)
         {
             // Добавление после успешно выполненной операции.
-            _entitiesHolder.Hold(itemToUpdate);
+            _changeTracker.Track(itemToUpdate);
             return Task.FromResult(itemToUpdate);
         }
 
-        public Task<StockItem> FindByIdAsync(long id, CancellationToken cancellationToken = default)
+        public Task<StockItem> FindByIdAsync(long id, CancellationToken cancellationToken)
         {
             // пока что мок, что мы что-то нашли.
             var foundStockItem = new StockItem(
@@ -50,11 +51,11 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 new Quantity(2),
                 new QuantityValue(3));
             // Добавление после успешно выполненной операции.
-            _entitiesHolder.Hold(foundStockItem);
+            _changeTracker.Track(foundStockItem);
             return Task.FromResult(foundStockItem);
         }
 
-        public Task<StockItem> FindBySkuAsync(Sku sku, CancellationToken cancellationToken = default)
+        public Task<StockItem> FindBySkuAsync(Sku sku, CancellationToken cancellationToken)
         {
             // пока что мок, что мы что-то нашли.
             var foundStockItem = new StockItem(
@@ -65,7 +66,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 new Quantity(2),
                 new QuantityValue(3));
             // Добавление после успешно выполненной операции.
-            _entitiesHolder.Hold(foundStockItem);
+            _changeTracker.Track(foundStockItem);
             return Task.FromResult(foundStockItem);
         }
     }
