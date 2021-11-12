@@ -26,7 +26,7 @@ namespace OzonEdu.StockApi
         
 		public void ConfigureServices(IServiceCollection services)
         {
-	        services.AddMediatR(typeof(Startup));
+	        services.AddMediatR(typeof(Startup), typeof(DatabaseConnectionOptions));
 	        services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
 	        
 	        services.AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();

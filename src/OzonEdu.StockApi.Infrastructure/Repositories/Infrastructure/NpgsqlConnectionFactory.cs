@@ -1,3 +1,4 @@
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -10,33 +11,35 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
     public class NpgsqlConnectionFactory : IDbConnectionFactory<NpgsqlConnection>
     {
         private readonly DatabaseConnectionOptions _options;
-
+        private  NpgsqlConnection _connection;
         public NpgsqlConnectionFactory(IOptions<DatabaseConnectionOptions> options)
         {
             _options = options.Value;
         }
 
-        public NpgsqlConnection Connection { get; private set; }
 
         public async Task<NpgsqlConnection> CreateConnection(CancellationToken token)
         {
-            if (Connection != null)
+            if (_connection != null)
             {
-                return Connection;
+                return _connection;
             }
 
-            Connection = new NpgsqlConnection(_options.ConnectionString);
-            await Connection.OpenAsync(token);
-            Connection.Disposed += (o, e) =>
+            _connection = new NpgsqlConnection(_options.ConnectionString);
+            await _connection.OpenAsync(token);
+            _connection.StateChange += (o, e) =>
             {
-                Connection = null;
+                if (e.CurrentState == ConnectionState.Closed)
+                {
+                    _connection = null;
+                }
             };
-            return Connection;
+            return _connection;
         }
 
         public void Dispose()
         {
-            Connection?.Dispose();
+            _connection?.Dispose();
         }
     }
 }

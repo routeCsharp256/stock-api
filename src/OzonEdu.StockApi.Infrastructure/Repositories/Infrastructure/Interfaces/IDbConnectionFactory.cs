@@ -10,11 +10,6 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces
     public interface IDbConnectionFactory<TConnection> : IDisposable
     {
         /// <summary>
-        /// Подключение, которое будет "закешировано" после создания.
-        /// </summary>
-        public TConnection Connection { get; }
-
-        /// <summary>
         /// Создать подключение к БД.
         /// </summary>
         /// <returns></returns>
