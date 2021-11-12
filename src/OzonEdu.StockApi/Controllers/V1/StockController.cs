@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using OzonEdu.StockApi.HttpModels;
 using OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem;
 using OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate;
-using OzonEdu.StockApi.Models;
 
 namespace OzonEdu.StockApi.Controllers.V1
 {
@@ -38,7 +37,7 @@ namespace OzonEdu.StockApi.Controllers.V1
         }
 
         [HttpGet("quantity")]
-        public async Task<StockItemQuantityModel[]> GetAvailableQuantity([FromBody] long[] sku, CancellationToken token)
+        public async Task<StockItemQuantityModel[]> GetAvailableQuantity(long[] sku, CancellationToken token)
         {
             var result = await _mediator.Send(new GetStockItemsAvailableQuantityQuery
             {
