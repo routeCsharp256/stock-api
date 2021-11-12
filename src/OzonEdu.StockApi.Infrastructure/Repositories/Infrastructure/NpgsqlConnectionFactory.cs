@@ -14,7 +14,6 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
         public NpgsqlConnectionFactory(IOptions<DatabaseConnectionOptions> options)
         {
             _options = options.Value;
-            // TODO: Возможно, тут было бы неплохо провалидировать коннекшн стрингу на пустоту.
         }
 
         public NpgsqlConnection Connection { get; private set; }
@@ -28,10 +27,6 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
 
             Connection = new NpgsqlConnection(_options.ConnectionString);
             await Connection.OpenAsync(token);
-            Connection.Disposed += (o, e) =>
-            {
-                Connection = null;
-            };
             return Connection;
         }
 
