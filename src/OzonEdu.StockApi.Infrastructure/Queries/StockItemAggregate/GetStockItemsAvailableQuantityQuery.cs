@@ -1,15 +1,17 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using MediatR;
+using OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate.Responses;
 
 namespace OzonEdu.StockApi.Infrastructure.Queries.StockItemAggregate
 {
     /// <summary>
     /// Полуить доступное количество товарных позиций
     /// </summary>
-    public class GetAvailableQuantityQuery : IRequest<int>
+    public class GetStockItemsAvailableQuantityQuery : IRequest<GetStockItemsAvailableQuantityQueryResponse>
     {
         /// <summary>
         /// Идентификатор товарной позиции
         /// </summary>
-        public long Sku { get; set; }
+        public IReadOnlyList<long> Skus { get; set; }
     }
 }

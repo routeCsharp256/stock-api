@@ -11,7 +11,8 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
     /// </summary>
     public class DeliveryRequest : Entity
     {
-        public DeliveryRequest(RequestNumber requestNumber,
+        public DeliveryRequest(
+            RequestNumber requestNumber,
             RequestStatus requestStatus,
             IReadOnlyList<Sku> skuCollection)
         {

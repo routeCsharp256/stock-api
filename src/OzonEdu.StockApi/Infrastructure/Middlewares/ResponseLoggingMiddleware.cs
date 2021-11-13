@@ -21,6 +21,12 @@ namespace OzonEdu.StockApi.Infrastructure.Middlewares
         
         public async Task InvokeAsync(HttpContext context)
         {
+            if (string.Equals(context.Request.ContentType, "application/grpc", StringComparison.OrdinalIgnoreCase))
+            {
+                await _next(context);
+                return;
+            }
+            
             var originalBodyStream = context.Response.Body;
             await using var responseBody = new MemoryStream();
             context.Response.Body = responseBody;

@@ -1,26 +1,55 @@
 syntax = "proto3";
 option csharp_namespace = "OzonEdu.StockApi.Grpc";
-package StockApi;
+package OzonEdu.StockApi.Grpc;
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
 
 service StockApiGrpc {
-  rpc GetAllStockItems (google.protobuf.Empty) returns (GetAllStockItemsResponse);
-  rpc AddStockItem (AddStockItemRequest) returns (google.protobuf.Empty);
+  rpc GetAllStockItems (google.protobuf.Empty) returns (StockItemsResponse);
+  rpc GetStockItemsAvailability(SkusRequest) returns (StockItemsAvailabilityResponse);
+  rpc GiveOutItems(GiveOutItemsRequest) returns (google.protobuf.Empty);
+  rpc GetItemTypes(google.protobuf.Empty) returns(ItemTypesResult);
+  rpc GetByItemType(IntIdModel) returns (StockItemsResponse);
 }
 
-message GetAllStockItemsResponse {
-  repeated GetAllStockItemsResponseUnit stocks = 1;
+message StockItemsResponse {
+  repeated StockItemUnit items = 1;
 }
 
-message GetAllStockItemsResponseUnit {
-  int64 item_id = 1;
-  string item_name = 2;
-  int32 quantity = 3;
+message StockItemUnit {
+  int64 sku = 1;
+  int64 item_type_id = 2;
+  string item_name = 3;
+  int32 quantity = 4;
 }
 
-message AddStockItemRequest {
-  string item_name = 1;
+message SkusRequest{
+  repeated int64 skus = 1;
+}
+
+message StockItemsAvailabilityResponse{
+  repeated SkuQuantityItem items = 1;
+}
+
+message GiveOutItemsRequest{
+  repeated SkuQuantityItem items = 1;
+}
+
+message SkuQuantityItem{
+  int64 sku = 1;
   int32 quantity = 2;
+}
+
+message ItemTypesResult{
+  repeated ItemTypeModel items = 1;
+}
+
+message ItemTypeModel{
+  int64 id = 1;
+  string name = 2;
+}
+
+message IntIdModel{
+  int32 id = 1;
 }

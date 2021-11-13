@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  stock-api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "5070:5000"
+      - "5072:5002"
+    environment:
+      DatabaseConnectionOptions__ConnectionString: "Host=host.docker.internal;Port=5426;Database=stock-api;Username=postgres;Password=stockApiPassword"
+    depends_on:
+      - stock-api-db
+
+  stock-api-db:
+    image: postgres:latest
+    ports:
+      - "5426:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: stockApiPassword
+      POSTGRES_DB: stock-api
+    command: "-c log_statement=all"

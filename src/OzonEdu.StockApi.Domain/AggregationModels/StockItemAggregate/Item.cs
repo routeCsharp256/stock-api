@@ -8,6 +8,7 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
 
         public Item(ItemType type)
         {
+            Id = type.Id;
             Type = type;
         }
     }
