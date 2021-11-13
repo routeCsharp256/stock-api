@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OzonEdu.StockApi.Enums;
 
 namespace OzonEdu.StockApi.HttpModels
 {
@@ -8,7 +9,7 @@ namespace OzonEdu.StockApi.HttpModels
 
         public int DeliveryRequestId { get; init; }
 
-        public int RequestStatus { get; init; }
+        public DeliveryRequestStatus RequestStatus { get; init; }
         
         public IReadOnlyList<long> SkusCollection { get; init; }
     }

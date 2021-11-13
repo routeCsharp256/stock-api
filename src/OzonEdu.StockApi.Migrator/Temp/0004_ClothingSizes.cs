@@ -1,6 +1,6 @@
 using FluentMigrator;
 
-namespace OzonEdu.StockApi.Migrator.Migrations
+namespace OzonEdu.StockApi.Migrator.Temp
 {
     [Migration(4)]
     public class ClothingSizes: Migration

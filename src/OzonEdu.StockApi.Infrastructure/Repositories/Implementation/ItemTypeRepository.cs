@@ -42,15 +42,5 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
 
             return result;
         }
-
-        public Task<Item> CreateAsync(Item itemToCreate, CancellationToken cancellationToken = default)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<Item> UpdateAsync(Item itemToUpdate, CancellationToken cancellationToken = default)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

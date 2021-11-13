@@ -9,21 +9,12 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
     /// </summary>
     public interface IDeliveryRequestRepository : IRepository<DeliveryRequest>
     {
-        /// <summary>
-        /// Получить заявку по идентификатору
-        /// </summary>
-        /// <param name="id">Идентификатор заявки</param>
-        /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
-        /// <returns>Объект заявки</returns>
-        Task<DeliveryRequest> FindByIdAsync(int id, CancellationToken cancellationToken = default);
+        Task<DeliveryRequest> CreateAsync(DeliveryRequest itemToCreate, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Получить заявку по номеру заявки
-        /// </summary>
-        /// <param name="stockItem">Номер заявки</param>
-        /// <param name="cancellationToken">Токен для отмены операции. <see cref="CancellationToken"/></param>
-        /// <returns>Объект заявки</returns>
-        Task<DeliveryRequest> FindByRequestNumberAsync(RequestNumber requestNumber,
-            CancellationToken cancellationToken = default);
+        Task<DeliveryRequest> FindByIdAsync(int id, CancellationToken cancellationToken);
+
+        Task<DeliveryRequest> FindByRequestNumberAsync(
+            RequestNumber requestNumber,
+            CancellationToken cancellationToken);
     }
 }

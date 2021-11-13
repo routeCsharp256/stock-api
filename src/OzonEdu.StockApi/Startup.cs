@@ -26,19 +26,30 @@ namespace OzonEdu.StockApi
         
 		public void ConfigureServices(IServiceCollection services)
         {
-            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-	        services.AddMediatR(typeof(Startup), typeof(DatabaseConnectionOptions));
-	        services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
-	        
-	        services.AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
-	        services.AddScoped<IUnitOfWork, UnitOfWork>();
-	        services.AddScoped<IChangeTracker, ChangeTracker>();
-	        
-	        services.AddScoped<IStockItemRepository, StockItemRepository>();
-	        services.AddScoped<IDeliveryRequestRepository, DeliveryRequestRepository>();
-	        
-	        // Для демонстрации.
-	        services.AddScoped<IItemTypeRepository, ItemTypeRepository>();
+	        AddMediator(services);
+	        AddDatabaseComponents(services);
+	        AddRepositories(services);
+        }
+
+		private static void AddMediator(IServiceCollection services)
+		{
+			services.AddMediatR(typeof(Startup), typeof(DatabaseConnectionOptions));
+		}
+
+		private void AddDatabaseComponents(IServiceCollection services)
+		{
+			services.Configure<DatabaseConnectionOptions>(Configuration.GetSection(nameof(DatabaseConnectionOptions)));
+			services.AddScoped<IDbConnectionFactory<NpgsqlConnection>, NpgsqlConnectionFactory>();
+			services.AddScoped<IUnitOfWork, UnitOfWork>();
+			services.AddScoped<IChangeTracker, ChangeTracker>();
+		}
+
+		private static void AddRepositories(IServiceCollection services)
+		{
+			Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+			services.AddScoped<IStockItemRepository, StockItemRepository>();
+			services.AddScoped<IDeliveryRequestRepository, DeliveryRequestRepository>();
+			services.AddScoped<IItemTypeRepository, ItemTypeRepository>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

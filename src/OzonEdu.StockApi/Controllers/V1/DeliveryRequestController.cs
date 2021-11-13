@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OzonEdu.StockApi.Enums;
 using OzonEdu.StockApi.HttpModels;
 using OzonEdu.StockApi.Infrastructure.Commands.CreateDeliveryRequest;
 using OzonEdu.StockApi.Infrastructure.Models;
@@ -35,7 +36,7 @@ namespace OzonEdu.StockApi.Controllers.V1
             return result.Items.Select(it => new DeliveryRequestViewModel
             {
                 Id = it.Id,
-                RequestStatus = (int)it.RequestStatus, // TODO: Исправить.
+                RequestStatus = it.RequestStatus,
                 DeliveryRequestId = it.DeliveryRequestId,
                 SkusCollection = it.SkusCollection
             }).ToList();
@@ -53,7 +54,7 @@ namespace OzonEdu.StockApi.Controllers.V1
             return result.Items.Select(it => new DeliveryRequestViewModel
             {
                 Id = it.Id,
-                RequestStatus = (int)it.RequestStatus, // TODO: Исправить.
+                RequestStatus = it.RequestStatus,
                 DeliveryRequestId = it.DeliveryRequestId,
                 SkusCollection = it.SkusCollection
             }).ToList();

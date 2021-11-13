@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OzonEdu.StockApi.Domain\OzonEdu.StockApi.Domain.csproj" />
+      <ProjectReference Include="..\OzonEdu.StockApi.Enums\OzonEdu.StockApi.Enums.csproj" />
     </ItemGroup>
 
     <ItemGroup>

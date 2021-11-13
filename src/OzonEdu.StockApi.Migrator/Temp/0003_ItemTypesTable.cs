@@ -1,6 +1,6 @@
 using FluentMigrator;
 
-namespace OzonEdu.StockApi.Migrator.Migrations
+namespace OzonEdu.StockApi.Migrator.Temp
 {
     [Migration(3)]
     public class ItemTypes:Migration

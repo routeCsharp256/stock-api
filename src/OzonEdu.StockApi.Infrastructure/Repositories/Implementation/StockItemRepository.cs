@@ -22,7 +22,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
             _changeTracker = changeTracker;
         }
 
-        public async Task<StockItem> CreateAsync(StockItem itemToCreate, CancellationToken cancellationToken = default)
+        public async Task<StockItem> CreateAsync(StockItem itemToCreate, CancellationToken cancellationToken)
         {
             const string sql = @"
                 INSERT INTO skus (id, name, item_type_id, clothing_size)
@@ -185,13 +185,15 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                     clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
                     new Quantity(stock.Quantity),
                     new QuantityValue(stock.MinimalQuantity)));
-            
+
+            var result = stockItems.ToArray();
             // Добавление после успешно выполненной операции.
-            foreach (var stockItem in stockItems)
+            foreach (var stockItem in result)
             {
                 _changeTracker.Track(stockItem);
             }
-            return stockItems.ToList();
+
+            return result;
         }
     }
 }

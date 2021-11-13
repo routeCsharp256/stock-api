@@ -1,7 +1,6 @@
 using FluentMigrator;
-using FluentMigrator.Postgres;
 
-namespace OzonEdu.StockApi.Migrator.Migrations
+namespace OzonEdu.StockApi.Migrator.Temp
 {
     [Migration(5)]
     public class DeliveryRequests: Migration {

@@ -1,6 +1,6 @@
 using FluentMigrator;
 
-namespace OzonEdu.StockApi.Migrator.Migrations
+namespace OzonEdu.StockApi.Migrator.Temp
 {
     [Migration(6)]
     public class DeliveryRequestSkuMaps: Migration
