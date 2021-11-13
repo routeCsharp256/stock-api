@@ -30,7 +30,7 @@ namespace OzonEdu.StockApi.Domain.Models
 
         public bool IsTransient()
         {
-            return this.Id == default(Int32);
+            return Id == default(Int32);
         }
 
         public override bool Equals(object obj)
@@ -38,16 +38,16 @@ namespace OzonEdu.StockApi.Domain.Models
             if (obj is not Entity entity)
                 return false;
 
-            if (object.ReferenceEquals(this, entity))
+            if (ReferenceEquals(this, entity))
                 return true;
 
-            if (this.GetType() != entity.GetType())
+            if (GetType() != entity.GetType())
                 return false;
 
-            if (entity.IsTransient() || this.IsTransient())
+            if (entity.IsTransient() || IsTransient())
                 return false;
             else
-                return entity.Id == this.Id;
+                return entity.Id == Id;
         }
 
         public override int GetHashCode()

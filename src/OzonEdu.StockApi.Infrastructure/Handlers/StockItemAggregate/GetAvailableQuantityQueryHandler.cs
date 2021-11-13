@@ -24,7 +24,7 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
         public async Task<GetStockItemsAvailableQuantityQueryResponse> Handle(GetStockItemsAvailableQuantityQuery request, CancellationToken cancellationToken)
         {
             var result = await _stockItemRepository.FindBySkusAsync(request.Skus.Select(x => 
-                new OzonEdu.StockApi.Domain.AggregationModels.ValueObjects.Sku(x)).ToList(), cancellationToken);
+                new Sku(x)).ToList(), cancellationToken);
             return new GetStockItemsAvailableQuantityQueryResponse
             {
                 Items = result.Select(x => new StockItemQuantityDto

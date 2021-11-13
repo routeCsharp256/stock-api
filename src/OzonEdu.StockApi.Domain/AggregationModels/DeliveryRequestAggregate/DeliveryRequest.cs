@@ -49,8 +49,10 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
         public void ChangeStatus(RequestStatus status)
         {
             if (RequestStatus.Equals(RequestStatus.Done))
+            {
                 throw new DeliveryRequestStatusException($"Request in done. Change status unavailable");
-            
+            }
+
             RequestStatus = status;
         }
     }

@@ -32,7 +32,7 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
             var newStockItem = new StockItem(
                 new Sku(request.Sku),
                 new Name(request.Name),
-                new Item(ItemType
+                new Item(Enumeration
                     .GetAll<ItemType>()
                     .FirstOrDefault(it => it.Id.Equals(request.StockItemType))),
                 Enumeration
