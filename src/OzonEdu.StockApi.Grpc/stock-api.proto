@@ -8,7 +8,7 @@ import "google/protobuf/wrappers.proto";
 service StockApiGrpc {
   rpc GetAllStockItems (google.protobuf.Empty) returns (StockItemsResponse);
   rpc GetStockItemsAvailability(SkusRequest) returns (StockItemsAvailabilityResponse);
-  rpc GiveOutItems(GiveOutItemsRequest) returns (google.protobuf.Empty);
+  rpc GiveOutItems(GiveOutItemsRequest) returns (GiveOutItemsResponse);
   rpc GetItemTypes(google.protobuf.Empty) returns(ItemTypesResult);
   rpc GetByItemType(IntIdModel) returns (StockItemsResponse);
 }
@@ -34,6 +34,15 @@ message StockItemsAvailabilityResponse{
 
 message GiveOutItemsRequest{
   repeated SkuQuantityItem items = 1;
+}
+
+message GiveOutItemsResponse {
+  Result result = 1;
+  
+  enum Result {
+    SUCCESSFUL = 0;
+    OUT_OF_STOCK = 1;
+  }
 }
 
 message SkuQuantityItem{

@@ -57,9 +57,9 @@ namespace OzonEdu.StockApi.GrpcServices
             };
         }
 
-        public override async Task<Empty> GiveOutItems(GiveOutItemsRequest request, ServerCallContext context)
+        public override async Task<GiveOutItemsResponse> GiveOutItems(GiveOutItemsRequest request, ServerCallContext context)
         {
-            await _mediator.Send(
+            var result = await _mediator.Send(
                 new GiveOutStockItemCommand
                 {
                     Items = request.Items.Select(
@@ -71,7 +71,10 @@ namespace OzonEdu.StockApi.GrpcServices
                         .ToList()
                 },
                 context.CancellationToken);
-            return new Empty();
+            return new GiveOutItemsResponse
+            {
+                Result = (GiveOutItemsResponse.Types.Result)result
+            };
         }
 
         public override async Task<StockItemsResponse> GetByItemType(IntIdModel request, ServerCallContext context)
