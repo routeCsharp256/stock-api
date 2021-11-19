@@ -13,13 +13,13 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
     public class StockItemRepository : IStockItemRepository
     {
         private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory;
-        private readonly IChangeTracker _changeTracker;
+        private readonly IQueryExecutor _queryExecutor;
         private const int Timeout = 5;
 
-        public StockItemRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IChangeTracker changeTracker)
+        public StockItemRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IQueryExecutor queryExecutor)
         {
             _dbConnectionFactory = dbConnectionFactory;
-            _changeTracker = changeTracker;
+            _queryExecutor = queryExecutor;
         }
 
         public async Task<StockItem> CreateAsync(StockItem itemToCreate, CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 SkuId = itemToCreate.Sku.Value,
                 Name = itemToCreate.Name.Value,
                 ItemTypeId = itemToCreate.ItemType.Type.Id,
-                ClothingSize = itemToCreate?.ClothingSize?.Id,
+                ClothingSize = itemToCreate.ClothingSize?.Id,
                 Quantity = itemToCreate.Quantity.Value,
                 MinimalQuantity = itemToCreate.MinimalQuantity.Value
             };
@@ -46,8 +46,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 cancellationToken: cancellationToken);
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
             await connection.ExecuteAsync(commandDefinition);
-            _changeTracker.Track(itemToCreate);
-            return itemToCreate;
+            return await _queryExecutor.Execute(itemToCreate, () => connection.ExecuteAsync(commandDefinition));
         }
 
         public async Task<StockItem> UpdateAsync(StockItem itemToUpdate, CancellationToken cancellationToken)
@@ -75,9 +74,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            await connection.ExecuteAsync(commandDefinition);
-            _changeTracker.Track(itemToUpdate);
-            return itemToUpdate;
+            return await _queryExecutor.Execute(itemToUpdate, () => connection.ExecuteAsync(commandDefinition));
         }
 
         public async Task<StockItem> FindBySkuAsync(Sku sku, CancellationToken cancellationToken)
@@ -103,19 +100,21 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var stockItems = await connection.QueryAsync<
-                Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(commandDefinition,
-                (skuModel, stock, itemType, clothingSize) => new StockItem(
-                    new Sku(skuModel.Id),
-                    new Name(skuModel.Name),
-                    new Item(new ItemType(itemType.Id, itemType.Name)),
-                    clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
-                    new Quantity(stock.Quantity),
-                    new QuantityValue(stock.MinimalQuantity)));
-            // Добавление после успешно выполненной операции.
-            var stockItem = stockItems.First();
-            _changeTracker.Track(stockItem);
-            return stockItem;
+            return await _queryExecutor.Execute(
+                async () =>
+                {
+                    var stockItems = await connection.QueryAsync<
+                        Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(
+                        commandDefinition,
+                        (skuModel, stock, itemType, clothingSize) => new StockItem(
+                            new Sku(skuModel.Id),
+                            new Name(skuModel.Name),
+                            new Item(new ItemType(itemType.Id, itemType.Name)),
+                            clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
+                            new Quantity(stock.Quantity),
+                            new QuantityValue(stock.MinimalQuantity)));
+                    return stockItems.First();
+                });
         }
 
         public async Task<IReadOnlyList<StockItem>> FindBySkusAsync(IReadOnlyList<Sku> skus, CancellationToken cancellationToken)
@@ -130,7 +129,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 INNER JOIN item_types on item_types.id = skus.item_type_id
                 LEFT JOIN clothing_sizes on clothing_sizes.id = skus.clothing_size
                 WHERE skus.id = ANY(@SkuIds);";
-            
+
             var parameters = new
             {
                 SkuIds = skus.Select(x => x.Value).ToArray(),
@@ -141,24 +140,21 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var stockItems = await connection.QueryAsync<
-                Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(commandDefinition,
-                (skuModel, stock, itemType, clothingSize) => new StockItem(
-                    new Sku(skuModel.Id),
-                    new Name(skuModel.Name),
-                    new Item(new ItemType(itemType.Id, itemType.Name)),
-                    clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
-                    new Quantity(stock.Quantity),
-                    new QuantityValue(stock.MinimalQuantity)));
-            var result = stockItems.ToList();
-            foreach (var stockItem in result)
-            {
-                _changeTracker.Track(stockItem);
-            }
-
-            return result;
+            var result = await _queryExecutor.Execute(
+                () =>
+                    connection.QueryAsync<
+                        Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(
+                        commandDefinition,
+                        (skuModel, stock, itemType, clothingSize) => new StockItem(
+                            new Sku(skuModel.Id),
+                            new Name(skuModel.Name),
+                            new Item(new ItemType(itemType.Id, itemType.Name)),
+                            clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
+                            new Quantity(stock.Quantity),
+                            new QuantityValue(stock.MinimalQuantity))));
+            return result.ToList();
         }
-        
+
         public async Task<IReadOnlyList<StockItem>> GetAllAsync(CancellationToken cancellationToken)
         {
             const string sql = @"
@@ -176,24 +172,17 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var stockItems = await connection.QueryAsync<
-                Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(commandDefinition,
-                (sku, stock, itemType, clothingSize) => new StockItem(
-                    new Sku(sku.Id),
-                    new Name(sku.Name),
-                    new Item(new ItemType(itemType.Id, itemType.Name)),
-                    clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
-                    new Quantity(stock.Quantity),
-                    new QuantityValue(stock.MinimalQuantity)));
-
-            var result = stockItems.ToArray();
-            // Добавление после успешно выполненной операции.
-            foreach (var stockItem in result)
-            {
-                _changeTracker.Track(stockItem);
-            }
-
-            return result;
+            var result = await _queryExecutor.Execute(
+                () => connection.QueryAsync<
+                    Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(commandDefinition,
+                    (sku, stock, itemType, clothingSize) => new StockItem(
+                        new Sku(sku.Id),
+                        new Name(sku.Name),
+                        new Item(new ItemType(itemType.Id, itemType.Name)),
+                        clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
+                        new Quantity(stock.Quantity),
+                        new QuantityValue(stock.MinimalQuantity))));
+            return result.ToList();
         }
 
         public async Task<IReadOnlyList<StockItem>> FindByItemTypeAsync(long itemTypeId,

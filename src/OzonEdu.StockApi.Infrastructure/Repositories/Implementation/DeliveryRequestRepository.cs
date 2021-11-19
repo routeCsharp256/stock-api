@@ -9,12 +9,12 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
     public class DeliveryRequestRepository : IDeliveryRequestRepository
     {
         private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory;
-        private readonly IChangeTracker _changeTracker;
+        private readonly IQueryExecutor _queryExecutor;
 
-        public DeliveryRequestRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IChangeTracker changeTracker)
+        public DeliveryRequestRepository(IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory, IQueryExecutor queryExecutor)
         {
             _dbConnectionFactory = dbConnectionFactory;
-            _changeTracker = changeTracker;
+            _queryExecutor = queryExecutor;
         }
         
         public Task<DeliveryRequest> CreateAsync(DeliveryRequest itemToCreate, CancellationToken cancellationToken)
