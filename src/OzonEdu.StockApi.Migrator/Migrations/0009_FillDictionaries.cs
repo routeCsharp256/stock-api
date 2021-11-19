@@ -34,6 +34,11 @@ namespace OzonEdu.StockApi.Migrator.Temp
                     (10, 'TShirtСonferenceListener'),
                     (11, 'NotepadСonferenceListener'),
                     (12, 'PenСonferenceListener')
+                    (13, 'TShirtVeteran')
+                    (14, 'SweatshirtVeteran')
+                    (15, 'NotepadVeteran')
+                    (16, 'PenVeteran')
+                    (17, 'CardHolderVeteran')
                 ON CONFLICT DO NOTHING
             ");
         }
