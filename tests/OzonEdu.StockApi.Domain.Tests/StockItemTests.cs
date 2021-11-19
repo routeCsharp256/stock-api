@@ -14,7 +14,7 @@ namespace OzonEdu.StockApi.Domain.Tests
             var stockItem = new StockItem(
                 new Sku(149568),
                 new Name("Super puper TShirt"),
-                new Item(ItemType.TShirt),
+                new Item(ItemType.TShirtStarter),
                 ClothingSize.S,
                 new Quantity(10),
                 new QuantityValue(5));
@@ -36,7 +36,7 @@ namespace OzonEdu.StockApi.Domain.Tests
             var stockItem = new StockItem(
                 new Sku(149568),
                 new Name("Super puper TShirt"),
-                new Item(ItemType.TShirt),
+                new Item(ItemType.TShirtStarter),
                 ClothingSize.S,
                 new Quantity(10),
                 new QuantityValue(5));

@@ -32,7 +32,7 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
                         x => new ItemTypeDto
                         {
                             Id = x.Id,
-                            Name = x.ToString()
+                            Name = x.Type.Name
                         })
                     .ToList()
             };

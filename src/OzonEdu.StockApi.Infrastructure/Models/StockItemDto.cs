@@ -18,7 +18,7 @@
         /// <summary>
         /// Идентификатор размера
         /// </summary>
-        public int ClothingSizeId { get; set; }
+        public int? ClothingSizeId { get; set; }
 
         /// <summary>
         /// Идентификатор типа товара
