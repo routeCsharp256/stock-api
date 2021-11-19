@@ -19,7 +19,7 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
         }
         
         public async Task<GetAllStockItemsQueryResponse> Handle(GetAllStockItemsQuery request, CancellationToken 
-        cancellationToken)
+            cancellationToken)
         {
             var items = await _stockItemRepository.GetAllAsync(cancellationToken);
             return new GetAllStockItemsQueryResponse
@@ -28,7 +28,7 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
                 {
                     Sku = x.Sku.Value,
                     Name = x.Name.Value,
-                    ClothingSizeId = x.ClothingSize.Id,
+                    ClothingSizeId = x.ClothingSize?.Id,
                     ItemTypeId = x.ItemType.Type.Id,
                     Quantity = x.Quantity.Value,
                     MinimalQuantity = x.MinimalQuantity.Value ?? 0,

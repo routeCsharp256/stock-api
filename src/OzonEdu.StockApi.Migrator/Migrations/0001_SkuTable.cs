@@ -15,7 +15,8 @@ namespace OzonEdu.StockApi.Migrator.Migrations
                     id BIGSERIAL PRIMARY KEY,
                     name TEXT NOT NULL,
                     item_type_id INT NOT NULL,
-                    clothing_size INT);"
+                    clothing_size INT,
+                    UNIQUE(item_type_id,clothing_size));"
             );
         }
 

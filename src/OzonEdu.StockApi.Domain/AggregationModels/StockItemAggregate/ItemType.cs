@@ -4,12 +4,19 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
 {
     public class ItemType : Enumeration
     {
-        public static ItemType TShirt = new(1, nameof(TShirt));
-        public static ItemType Sweatshirt = new(2, nameof(Sweatshirt));
-        public static ItemType Notepad = new(3, nameof(Notepad));
-        public static ItemType Bag = new(4, nameof(Bag));
-        public static ItemType Pen = new(5, nameof(Pen));
-        public static ItemType Socks = new(6, nameof(Socks));
+        public static ItemType TShirtStarter = new(1, nameof(TShirtStarter));
+        public static ItemType NotepadStarter = new(2, nameof(NotepadStarter));
+        public static ItemType PenStarter = new(3, nameof(PenStarter));
+        public static ItemType SocksStarter = new(4, nameof(SocksStarter));
+        public static ItemType TShirtAfterProbation = new(5, nameof(TShirtAfterProbation));
+        public static ItemType SweatshirtAfterProbation = new(6, nameof(SweatshirtAfterProbation));
+        public static ItemType SweatshirtСonferenceSpeaker = new(7, nameof(SweatshirtСonferenceSpeaker));
+        public static ItemType NotepadСonferenceSpeaker = new(8, nameof(NotepadСonferenceSpeaker));
+        public static ItemType PenСonferenceSpeaker = new(9, nameof(PenСonferenceSpeaker));
+        public static ItemType TShirtСonferenceListener = new(10, nameof(TShirtСonferenceListener));
+        public static ItemType NotepadСonferenceListener = new(11, nameof(NotepadСonferenceListener));
+        public static ItemType PenСonferenceListener = new(12, nameof(PenСonferenceListener));
+
 
         public ItemType(int id, string name) : base(id, name)
         {

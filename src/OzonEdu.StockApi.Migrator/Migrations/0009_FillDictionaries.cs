@@ -18,16 +18,22 @@ namespace OzonEdu.StockApi.Migrator.Temp
                     (6, 'XXL')
                 ON CONFLICT DO NOTHING
             ");
-            
+
             Execute.Sql(@"
                 INSERT INTO item_types (id, name)
                 VALUES 
-                    (1, 'TShirt'),
-                    (2, 'Sweatshirt'),
-                    (3, 'Notepad'),
-                    (4, 'Bag'),
-                    (5, 'Pen'),
-                    (6, 'Socks')
+                    (1,  'TShirtStarter'),
+                    (2,  'NotepadStarter'),
+                    (3,  'PenStarter'),
+                    (4,  'SocksStarter'),
+                    (5,  'TShirtAfterProbation'),
+                    (6,  'SweatshirtAfterProbation'),
+                    (7,  'SweatshirtСonferenceSpeaker'),
+                    (8,  'NotepadСonferenceSpeaker'),
+                    (9,  'PenСonferenceSpeaker'),
+                    (10, 'TShirtСonferenceListener'),
+                    (11, 'NotepadСonferenceListener'),
+                    (12, 'PenСonferenceListener')
                 ON CONFLICT DO NOTHING
             ");
         }

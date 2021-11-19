@@ -17,5 +17,6 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
         Task<IReadOnlyList<StockItem>> FindBySkusAsync(IReadOnlyList<Sku> sku, CancellationToken cancellationToken);
 
         Task<IReadOnlyList<StockItem>> GetAllAsync(CancellationToken cancellationToken);
+        Task<IReadOnlyList<StockItem>> FindByItemTypeAsync(long itemTypeId, CancellationToken cancellationToken);
     }
 }

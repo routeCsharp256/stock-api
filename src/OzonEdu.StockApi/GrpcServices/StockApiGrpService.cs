@@ -34,7 +34,8 @@ namespace OzonEdu.StockApi.GrpcServices
                             Quantity = it.Quantity,
                             Sku = it.Sku,
                             ItemName = it.Name,
-                            ItemTypeId = it.ItemTypeId
+                            ItemTypeId = it.ItemTypeId,
+                            SizeId = it.ClothingSizeId,
                         })
                 }
             };
@@ -95,7 +96,8 @@ namespace OzonEdu.StockApi.GrpcServices
                             Quantity = it.Quantity,
                             Sku = it.Sku,
                             ItemName = it.Name,
-                            ItemTypeId = it.ItemTypeId
+                            ItemTypeId = it.ItemTypeId,
+                            SizeId = it.ClothingSizeId
                         }
                     )
                 }
