@@ -16,6 +16,11 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
         public static ItemType TShirtСonferenceListener = new(10, nameof(TShirtСonferenceListener));
         public static ItemType NotepadСonferenceListener = new(11, nameof(NotepadСonferenceListener));
         public static ItemType PenСonferenceListener = new(12, nameof(PenСonferenceListener));
+        public static ItemType TShirtVeteran = new(13, nameof(TShirtVeteran));
+        public static ItemType SweatshirtVeteran = new(14, nameof(SweatshirtVeteran));
+        public static ItemType NotepadVeteran = new(15, nameof(NotepadVeteran));
+        public static ItemType PenVeteran = new(16, nameof(PenVeteran));
+        public static ItemType CardHolderVeteran = new(17, nameof(CardHolderVeteran));
 
 
         public ItemType(int id, string name) : base(id, name)
