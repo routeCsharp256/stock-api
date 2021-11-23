@@ -61,7 +61,7 @@ namespace OzonEdu.StockApi.Migrator.Migrations
                     (47, 'PenСonferenceListener', 12, null),
                     (48, 'NotepadVeteran', 15, null),
                     (49, 'PenVeteran', 16, null),
-                    (50, 'CardHolderVeteran', 17, null),
+                    (50, 'CardHolderVeteran', 17, null)
                 ON CONFLICT DO NOTHING");
             
             Execute.Sql(@"
