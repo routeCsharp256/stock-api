@@ -69,11 +69,13 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
         public void SetClothingSize(ClothingSize size)
         {
             if (size is not null &&
-                (ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtStarter) ||
+                (ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtStarter) || 
                  ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtAfterProbation) || 
                  ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtСonferenceListener) || 
                  ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtAfterProbation)) || 
-                ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtСonferenceSpeaker))
+                 ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtСonferenceSpeaker) ||
+                 ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtVeteran) ||
+                 ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtVeteran))
             {
                 ClothingSize = size;
             }

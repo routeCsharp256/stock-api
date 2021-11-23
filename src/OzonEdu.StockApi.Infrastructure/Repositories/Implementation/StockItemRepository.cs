@@ -209,7 +209,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            var stockItems = await connection.QueryAsync<
+            var stockItems = await _queryExecutor.Execute( () => connection.QueryAsync<
                 Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(commandDefinition,
                 (skuModel, stock, itemType, clothingSize) => new StockItem(
                     new Sku(skuModel.Id),
@@ -217,14 +217,9 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                     new Item(new ItemType(itemType.Id, itemType.Name)),
                     clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
                     new Quantity(stock.Quantity),
-                    new QuantityValue(stock.MinimalQuantity)));
-            // Добавление после успешно выполненной операции.
-            var result = stockItems.ToList();
-            foreach (var item in result)
-            {
-                _changeTracker.Track(item);
-            }
-            return result;
+                    new QuantityValue(stock.MinimalQuantity))));
+            
+            return stockItems.ToList();
         }
     }
 }

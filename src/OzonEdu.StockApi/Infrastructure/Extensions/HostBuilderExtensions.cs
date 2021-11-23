@@ -75,6 +75,7 @@ namespace OzonEdu.StockApi.Infrastructure.Extensions
         
         public static IHostBuilder ConfigurePorts(this IHostBuilder builder)
         {
+
             var httpPortEnv = Environment.GetEnvironmentVariable("HTTP_PORT");
             if (!int.TryParse(httpPortEnv, out var httpPort))
             {
@@ -86,6 +87,13 @@ namespace OzonEdu.StockApi.Infrastructure.Extensions
             {
                 grpcPort = 5002;
             }
+            
+            if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true")
+            {
+                httpPort = 80;
+                grpcPort = 82;
+            }
+            
             builder.ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
