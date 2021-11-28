@@ -39,7 +39,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
             {
                 RequestId = itemToCreate.RequestNumber.Value,
                 RequestStatus = itemToCreate.RequestStatus.Id,
-                SkuId = itemToCreate.SkuCollection.FirstOrDefault()?.Value ?? 0
+                SkuId = itemToCreate.SkuCollection
             };
             var commandDefinition = new CommandDefinition(
                 sql,
@@ -85,7 +85,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                                     .Select(it => new Domain
                                         .AggregationModels
                                         .ValueObjects.Sku(it.SkuId))
-                                    .ToList()));
+                                    .ToList()), splitOn: "delivery_requests_id");
                     return stockItems.First();
                 });
         }
@@ -152,7 +152,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                                 .Select(it => new Domain
                                     .AggregationModels
                                     .ValueObjects.Sku(it.SkuId))
-                                .ToList())));
+                                .ToList()), splitOn: "delivery_requests_id"));
             
             return result.ToArray();
         }
@@ -189,7 +189,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                                 .Select(it => new Domain
                                     .AggregationModels
                                     .ValueObjects.Sku(it.SkuId))
-                                .ToList())));
+                                .ToList()), splitOn: "delivery_requests_id"));
             
             return result.ToArray();
         }
