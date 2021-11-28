@@ -33,6 +33,7 @@ namespace OzonEdu.StockApi.Controllers.V1
         {
             // use mediator
             throw new NotSupportedException();
+            //return await _mediator.Send(new GetAllStockItemsQuery(), token);
         }
 
         [HttpGet("{id:long}")]

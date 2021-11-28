@@ -7,7 +7,7 @@ namespace OzonEdu.StockApi.HttpModels
     {
         public int Id { get; init; }
 
-        public int DeliveryRequestId { get; init; }
+        public long DeliveryRequestId { get; init; }
 
         public DeliveryRequestStatus RequestStatus { get; init; }
         

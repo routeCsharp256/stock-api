@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -21,14 +22,14 @@ namespace OzonEdu.StockApi.HostedServices
     {
         private readonly KafkaConfiguration _config;
         private readonly IServiceScopeFactory _scopeFactory;
-        private readonly ILogger _logger;
+        private readonly ILogger<SupplyConsumerHostedService> _logger;
 
         protected string Topic { get; set; } = "supply_ship_event";
         
-        protected SupplyConsumerHostedService(
+        public SupplyConsumerHostedService(
             IOptions<KafkaConfiguration> config,
             IServiceScopeFactory scopeFactory,
-            ILogger logger, IMediator mediator)
+            ILogger<SupplyConsumerHostedService> logger, IMediator mediator)
         {
             _config = config.Value;
             _scopeFactory = scopeFactory;
@@ -52,8 +53,11 @@ namespace OzonEdu.StockApi.HostedServices
                     {
                         using (var scope = _scopeFactory.CreateScope())
                         {
+                            var sw = new Stopwatch();
                             try
                             {
+                                await Task.Yield();
+                                sw.Start();
                                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                                 var cr = c.Consume(stoppingToken);
                                 if (cr != null)
@@ -72,14 +76,15 @@ namespace OzonEdu.StockApi.HostedServices
                             }
                             catch (Exception ex)
                             {
-                                _logger.LogError($"Error: {ex.Message}");
-                                throw;
+                                sw.Stop();
+                                _logger.LogError($"Error while get consume. Message {ex.Message}");
                             }
                         }
                     }
                 }
                 finally
                 {
+                    c.Commit();
                     c.Close();
                 }
             }

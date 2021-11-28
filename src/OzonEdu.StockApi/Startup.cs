@@ -26,10 +26,11 @@ namespace OzonEdu.StockApi
         
 		public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHostedServices()
+            services.AddCustomOptions(Configuration)
+                .AddHostedServices()
                 .AddDatabaseConnection(Configuration)
                 .AddRepositories()
-                .AddMediatR(typeof(Startup), typeof(DatabaseConnectionOptions))
+                .AddMediatR(typeof(Startup).Assembly, typeof(DatabaseConnectionOptions).Assembly)
                 .AddExternalServices(Configuration)
                 .AddKafkaServices(Configuration)
                 .AddOpenTracing();

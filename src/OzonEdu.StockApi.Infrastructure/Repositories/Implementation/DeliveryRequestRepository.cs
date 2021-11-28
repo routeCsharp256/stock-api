@@ -53,9 +53,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 SELECT dr.id, dr.request_id, dr.request_status,
                        drs_skus.sku_id
                 FROM delivery_requests AS dr
-                INNER JOIN delivery_request_sku_maps as drs_skus on drs_skus.delivery_requests_id = drs_skus.id
-                INNER JOIN item_types on item_types.id = skus.item_type_id
-                LEFT JOIN clothing_sizes on clothing_sizes.id = skus.clothing_size
+                INNER JOIN delivery_request_sku_maps as drs_skus on drs_skus.delivery_requests_id = dr.id
                 WHERE dr.id = @DeliveryRequestId;";
 
             var parameters = new
@@ -93,9 +91,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                 SELECT dr.id, dr.request_id, dr.request_status,
                        drs_skus.sku_id
                 FROM delivery_requests AS dr
-                INNER JOIN delivery_request_sku_maps as drs_skus on drs_skus.delivery_requests_id = drs_skus.id
-                INNER JOIN item_types on item_types.id = skus.item_type_id
-                LEFT JOIN clothing_sizes on clothing_sizes.id = skus.clothing_size
+                INNER JOIN delivery_request_sku_maps as drs_skus on drs_skus.delivery_requests_id = dr.id
                 WHERE dr.request_id = @RequestId;";
 
             var parameters = new
@@ -124,6 +120,43 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                                     .ToList()));
                     return stockItems.First();
                 });
+        }
+
+        public async Task<IReadOnlyCollection<DeliveryRequest>> GetRequestsByStatusAsync(RequestStatus requestStatus,
+            CancellationToken cancellationToken)
+        {
+            const string sql = @"
+                SELECT dr.id, dr.request_id, dr.request_status,
+                       drs_skus.sku_id
+                FROM delivery_requests AS dr
+                INNER JOIN delivery_request_sku_maps as drs_skus on drs_skus.delivery_requests_id = dr.id
+                WHERE dr.request_status = @RequestStatusId;";
+
+            var parameters = new
+            {
+                RequestStatusId = requestStatus.Id,
+            };
+            var commandDefinition = new CommandDefinition(
+                sql,
+                parameters: parameters,
+                commandTimeout: Timeout,
+                cancellationToken: cancellationToken);
+            var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
+            var result = await _queryExecutor.Execute(
+                () => connection
+                    .QueryAsync<Models.DeliveryRequest, IEnumerable<Models.DeliveryRequestSkuMap>, DeliveryRequest>(
+                        commandDefinition,
+                        (deliveryRequest, deliveryRequestSkuMap) => new DeliveryRequest(
+                            new RequestNumber(deliveryRequest.RequestId),
+                            new RequestStatus(deliveryRequest.RequestStatus, ""),
+                            deliveryRequestSkuMap
+                                .Select(it => new Domain
+                                    .AggregationModels
+                                    .ValueObjects.Sku(it.SkuId))
+                                .ToList())));
+
+
+            return result.ToArray();
         }
     }
 }
