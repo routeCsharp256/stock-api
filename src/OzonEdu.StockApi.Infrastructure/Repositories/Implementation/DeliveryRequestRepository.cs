@@ -189,7 +189,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                                 .Select(it => new Domain
                                     .AggregationModels
                                     .ValueObjects.Sku(it.SkuId))
-                                .ToList())));
+                                .ToList()), splitOn: "delivery_requests_id"));
             
             return result.ToArray();
         }
