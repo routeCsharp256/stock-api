@@ -4,7 +4,7 @@ using MediatR;
 using OzonEdu.StockApi.Domain.Events;
 using OzonEdu.StockApi.Infrastructure.MessageBroker;
 
-namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
+namespace OzonEdu.StockApi.Infrastructure.Handlers.DomainEvent
 {
     public class SupplyArrivedWithStockItemsEventHandler : INotificationHandler<SupplyArrivedWithStockItemsDomainEvent>
     {

@@ -18,10 +18,11 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
         private readonly IUnitOfWork _unitOfWork;
 
         public ReplenishStockCommandHandler(IStockItemRepository stockItemRepository, 
-            IDeliveryRequestRepository deliveryRequestRepository)
+            IDeliveryRequestRepository deliveryRequestRepository, IUnitOfWork unitOfWork)
         {
             _stockItemRepository = stockItemRepository;
             _deliveryRequestRepository = deliveryRequestRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Unit> Handle(ReplenishStockCommand request, CancellationToken cancellationToken)

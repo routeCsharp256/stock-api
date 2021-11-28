@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -21,8 +22,19 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.DeliveryRequestAggregate
 
         public async Task<DeliveryRequestsQueryResponse> Handle(GetDeliveryRequestsQuery request, CancellationToken cancellationToken)
         {
-            var fromDb = await _deliveryRequestRepository
-                .GetRequestsByStatusAsync(new RequestStatus((int)request.Status, ""), cancellationToken);
+            IReadOnlyCollection<DeliveryRequest> fromDb = null;
+            if (request.Status == DeliveryRequestStatus.All)
+            {
+                fromDb = await _deliveryRequestRepository.GetAllRequestsAsync(cancellationToken);
+            }
+            else
+            {
+                fromDb = await _deliveryRequestRepository
+                    .GetRequestsByStatusAsync(new RequestStatus((int)request.Status, ""), cancellationToken);    
+            }
+
+            if (fromDb is null)
+                return new DeliveryRequestsQueryResponse();
 
             return new DeliveryRequestsQueryResponse()
             {

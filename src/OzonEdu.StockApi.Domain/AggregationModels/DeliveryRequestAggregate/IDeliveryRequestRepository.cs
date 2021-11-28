@@ -18,6 +18,8 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
             RequestNumber requestNumber,
             CancellationToken cancellationToken);
 
+        Task<IReadOnlyCollection<DeliveryRequest>> GetAllRequestsAsync(CancellationToken cancellationToken);
+
         Task<IReadOnlyCollection<DeliveryRequest>> GetRequestsByStatusAsync(RequestStatus requestStatus,
             CancellationToken cancellationToken);
     }

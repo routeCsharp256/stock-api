@@ -22,7 +22,7 @@ namespace OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem
         /// <summary>
         /// Размер позиции, если это одежда
         /// </summary>
-        public int ClothingSize { get; init; }
+        public int? ClothingSize { get; init; }
 
         /// <summary>
         /// Количество элементов в наличии
