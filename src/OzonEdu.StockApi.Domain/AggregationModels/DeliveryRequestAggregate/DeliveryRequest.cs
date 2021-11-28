@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.ValueObjects;
+using OzonEdu.StockApi.Domain.Events;
 using OzonEdu.StockApi.Domain.Exceptions.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Domain.Models;
 
@@ -36,9 +38,22 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
         /// </summary>
         public IReadOnlyList<Sku> SkuCollection { get; }
 
+        /// <summary>
+        /// Установить номер заказа
+        /// </summary>
+        /// <param name="number">Номер заказа</param>
         public void SetRequestNumber(RequestNumber number)
         {
             RequestNumber = number;
+        }
+        
+        /// <summary>
+        /// Установить номер заказа
+        /// </summary>
+        /// <param name="number">Номер заказа</param>
+        public void SetRequestNumber(long number)
+        {
+            RequestNumber = new RequestNumber(number);
         }
 
         /// <summary>

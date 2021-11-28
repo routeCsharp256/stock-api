@@ -36,6 +36,11 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
         
         public QuantityValue MinimalQuantity { get; private set; }
 
+        // public static StockItem CreateStockItem(long sku, string name, Item)
+        // {
+        //     
+        // }
+
         public void IncreaseQuantity(int valueToIncrease)
         {
             if (valueToIncrease < 0)
@@ -44,6 +49,7 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
             }
 
             Quantity = new Quantity(Quantity.Value + valueToIncrease);
+            AddSupplyArrivedWithStockItemsDomainEvent(Sku, this.ItemType.Type, new Quantity(valueToIncrease));
         }
 
         public void GiveOutItems(int valueToGiveOut)
@@ -73,7 +79,7 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
                  ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtAfterProbation) || 
                  ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtСonferenceListener) || 
                  ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtAfterProbation)) || 
-                 ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtСonferenceSpeaker) ||
+                 ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtConferenceSpeaker) ||
                  ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtVeteran) ||
                  ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtVeteran))
             {
@@ -118,6 +124,12 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
         {
             var orderStartedDomainEvent = new ReachedMinimumStockItemsNumberDomainEvent(sku);
             AddDomainEvent(orderStartedDomainEvent);
+        }
+
+        private void AddSupplyArrivedWithStockItemsDomainEvent(Sku sku, ItemType itemType, Quantity quantity)
+        {
+            var supplyArrivedDomainEvent = new SupplyArrivedWithStockItemsDomainEvent(sku, itemType, quantity);
+            AddDomainEvent(supplyArrivedDomainEvent);
         }
     }
 }

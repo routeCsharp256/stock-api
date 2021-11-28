@@ -10,12 +10,15 @@ namespace OzonEdu.StockApi.Domain.Events
     public class SupplyArrivedWithStockItemsDomainEvent : INotification
     {
         public Sku StockItemSku { get; }
+        public ItemType ItemType { get; set; }
         public Quantity Quantity { get; }
 
         public SupplyArrivedWithStockItemsDomainEvent(Sku stockItemSku,
+            ItemType itemType,
             Quantity quantity)
         {
             StockItemSku = stockItemSku;
+            ItemType = itemType;
             Quantity = quantity;
         }
     }

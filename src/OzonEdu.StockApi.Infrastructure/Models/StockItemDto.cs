@@ -33,6 +33,6 @@
         /// <summary>
         /// Минимальное допустимое количество
         /// </summary>
-        public int MinimalQuantity { get; set; }
+        public int? MinimalQuantity { get; set; }
     }
 }

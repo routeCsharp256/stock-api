@@ -9,7 +9,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OzonEdu.StockApi.Grpc\OzonEdu.StockApi.Grpc.csproj" />
-      <ProjectReference Include="..\OzonEdu.StockApi.HttpClients\OzonEdu.StockApi.HttpClients.csproj" />
       <ProjectReference Include="..\OzonEdu.StockApi.HttpModels\OzonEdu.StockApi.HttpModels.csproj" />
       <ProjectReference Include="..\OzonEdu.StockApi.Infrastructure\OzonEdu.StockApi.Infrastructure.csproj" />
       <ProjectReference Include="..\OzonEdu.StockApi.Migrator\OzonEdu.StockApi.Migrator.csproj" />
@@ -18,7 +17,9 @@
 
     <ItemGroup>
       <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+      <PackageReference Include="Jaeger" Version="1.0.3" />
       <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+      <PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.8.0" />
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
