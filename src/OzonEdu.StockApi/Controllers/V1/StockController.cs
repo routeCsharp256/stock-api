@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using MediatR;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 using OzonEdu.StockApi.HttpModels;

@@ -10,8 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenTracing;
 using OpenTracing.Contrib.NetCore.Configuration;
+using OzonEdu.StockApi.Extensions;
 using OzonEdu.StockApi.GrpcServices;
 using OzonEdu.StockApi.Infrastructure.Configuration;
+using OzonEdu.StockApi.Infrastructure.Extensions;
 
 namespace OzonEdu.StockApi
 {

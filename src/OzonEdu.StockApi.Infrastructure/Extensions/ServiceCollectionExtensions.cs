@@ -1,5 +1,6 @@
 ﻿using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Ozon.DotNetCourse.SupplyService.GRPC;
 using OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate;
@@ -11,7 +12,7 @@ using OzonEdu.StockApi.Infrastructure.Repositories.Implementation;
 using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure;
 using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace OzonEdu.StockApi.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
     {
@@ -38,6 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+            PostgresConfiguration.MapCompositeTypes();
             services.AddScoped<IStockItemRepository, StockItemRepository>();
             services.AddScoped<IDeliveryRequestRepository, DeliveryRequestRepository>();
             services.AddScoped<IItemTypeRepository, ItemTypeRepository>();

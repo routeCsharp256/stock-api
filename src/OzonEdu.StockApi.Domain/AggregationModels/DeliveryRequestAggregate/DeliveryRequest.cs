@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.ValueObjects;
-using OzonEdu.StockApi.Domain.Events;
 using OzonEdu.StockApi.Domain.Exceptions.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Domain.Models;
 

@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using OzonEdu.StockApi.HostedServices;
 using OzonEdu.StockApi.Infrastructure.Configuration;
+using OzonEdu.StockApi.Infrastructure.Extensions;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace OzonEdu.StockApi.Extensions
 {
     public static class ServiceCollectionExtensions
     {

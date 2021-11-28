@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -6,6 +7,7 @@ using Dapper;
 using Npgsql;
 using OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces;
+using OzonEdu.StockApi.Infrastructure.Repositories.Models;
 using DeliveryRequest = OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate.DeliveryRequest;
 
 namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
@@ -23,34 +25,46 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
             _queryExecutor = queryExecutor;
         }
 
-        public async Task<DeliveryRequest> CreateAsync(DeliveryRequest itemToCreate,
-            CancellationToken cancellationToken)    
+        public async Task<DeliveryRequest> CreateAsync(
+            DeliveryRequest itemToCreate,
+            CancellationToken cancellationToken)
         {
-            const string sql = @"
-                with rows as (
-                INSERT INTO delivery_requests (request_id, request_status) 
-                VALUES (@RequestId, @RequestStatus) RETURNING id
-                )
-                INSERT INTO delivery_request_sku_maps (delivery_requests_id, sku_id)
-                SELECT id, @SkuId
-                FROM rows;";
-
-            var parameters = new
-            {
-                RequestId = itemToCreate.RequestNumber.Value,
-                RequestStatus = itemToCreate.RequestStatus.Id,
-                SkuId = itemToCreate.SkuCollection.FirstOrDefault()?.Value ?? 0
-            };
-            var commandDefinition = new CommandDefinition(
-                sql,
-                parameters: parameters,
-                commandTimeout: Timeout,
-                cancellationToken: cancellationToken);
-
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            await connection.ExecuteAsync(commandDefinition);
+            return await _queryExecutor.Execute(
+                itemToCreate,
+                async () =>
+                {
+                    var deliveryRequestId = await connection.QuerySingleAsync<long>(
+                        new CommandDefinition(
+                            commandText: @"INSERT INTO delivery_requests (request_id, request_status) 
+                            VALUES (@RequestId, @RequestStatus) RETURNING id",
+                            parameters: new
+                            {
+                                RequestId = itemToCreate.RequestNumber.Value,
+                                RequestStatus = itemToCreate.RequestStatus.Id,
+                            },
+                            commandTimeout: Timeout,
+                            cancellationToken: cancellationToken));
 
-            return await _queryExecutor.Execute(itemToCreate, () => connection.ExecuteAsync(commandDefinition));
+                    await connection.ExecuteAsync(
+                        new CommandDefinition(
+                            commandText: @"INSERT INTO delivery_request_sku_maps (delivery_requests_id, sku_id)
+                            SELECT delivery_requests_id, sku_id
+                            FROM UNNEST(@SkuMaps);",
+                            parameters: new
+                            {
+                                SkuMaps = itemToCreate.SkuCollection?.Select(
+                                            x => new DeliveryRequestSkuMap
+                                            {
+                                                DeliveryRequestsId = deliveryRequestId,
+                                                SkuId = x.Value
+                                            })
+                                        .ToArray() ??
+                                    Array.Empty<DeliveryRequestSkuMap>()
+                            },
+                            commandTimeout: Timeout,
+                            cancellationToken: cancellationToken));
+                });
         }
 
         public async Task<DeliveryRequest> FindByIdAsync(int id, CancellationToken cancellationToken)
@@ -190,7 +204,6 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                                     .AggregationModels
                                     .ValueObjects.Sku(it.SkuId))
                                 .ToList()), splitOn: "delivery_requests_id"));
-            
             return result.ToArray();
         }
     }
