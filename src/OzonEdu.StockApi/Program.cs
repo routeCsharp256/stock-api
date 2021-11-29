@@ -13,5 +13,4 @@ static IHostBuilder CreateHostBuilder(string[] args)
                 .Configuration(context.Configuration)
                 .WriteTo.Console())
         .ConfigurePorts()
-        .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
         .ConfigureMicroserviceInfrastructure();
