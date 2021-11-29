@@ -50,14 +50,16 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
                 _changeTracker.TrackedEntities
                     .SelectMany(x =>
                     {
-                        var events = x.DomainEvents.ToList();
-                        x.ClearDomainEvents();
+                        var events = x.Value.DomainEvents.ToList();
+                        x.Value.ClearDomainEvents();
                         return events;
                     }));
+
             // Можно отправлять все и сразу через Task.WhenAll.
             while (domainEvents.TryDequeue(out var notification))
             {
-                await _publisher.Publish(notification, cancellationToken);
+                dynamic not = (dynamic)notification;
+                await _publisher.Publish(not, cancellationToken);
             }
 
             await _npgsqlTransaction.CommitAsync(cancellationToken);

@@ -11,6 +11,5 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
             Id = type.Id;
             Type = type;
         }
-        
     }
 }

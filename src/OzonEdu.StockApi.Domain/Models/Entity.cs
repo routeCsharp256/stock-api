@@ -6,8 +6,8 @@ namespace OzonEdu.StockApi.Domain.Models
 {
     public abstract class Entity
     {
-        int? _requestedHashCode;
-        public virtual int Id { get; protected set; }
+        protected int? _requestedHashCode;
+        public virtual long Id { get; protected set; }
 
         private readonly List<INotification> _domainEvents = new();
         
@@ -30,7 +30,7 @@ namespace OzonEdu.StockApi.Domain.Models
 
         public bool IsTransient()
         {
-            return Id == default(Int32);
+            return Id == default(Int64);
         }
 
         public override bool Equals(object obj)

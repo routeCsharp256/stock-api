@@ -5,8 +5,10 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Models
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class DeliveryRequestSkuMap
     {
-        public long DeliveryRequestId { get; set; }
+        public long DeliveryRequestsId { get; set; }
 
         public long SkuId { get; set; }
+
+        public DeliveryRequest DeliveryRequest { get; set; }
     }
 }

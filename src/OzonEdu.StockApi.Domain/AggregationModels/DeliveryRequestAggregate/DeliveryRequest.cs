@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using OzonEdu.StockApi.Domain.AggregationModels.ValueObjects;
 using OzonEdu.StockApi.Domain.Exceptions.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Domain.Models;
@@ -36,9 +37,22 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
         /// </summary>
         public IReadOnlyList<Sku> SkuCollection { get; }
 
+        /// <summary>
+        /// Установить номер заказа
+        /// </summary>
+        /// <param name="number">Номер заказа</param>
         public void SetRequestNumber(RequestNumber number)
         {
             RequestNumber = number;
+        }
+        
+        /// <summary>
+        /// Установить номер заказа
+        /// </summary>
+        /// <param name="number">Номер заказа</param>
+        public void SetRequestNumber(long number)
+        {
+            RequestNumber = new RequestNumber(number);
         }
 
         /// <summary>
@@ -54,6 +68,35 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
             }
 
             RequestStatus = status;
+        }
+
+        public static DeliveryRequest CreateInstance(long id, long requestNumber, int requestStatusId,
+            string requestStatusName,
+            IReadOnlyCollection<long> skusCollection)
+        {
+            var result = new DeliveryRequest(new RequestNumber(requestNumber),
+                new RequestStatus(requestStatusId, requestStatusName),
+                skusCollection.Select(it => new Sku(it)).ToList());
+            result.Id = id;
+            return result;
+        }
+        
+        public override int GetHashCode()
+        {
+            if (!IsTransient())
+            {
+                if (!_requestedHashCode.HasValue)
+                    _requestedHashCode = HashCode.Combine(Id,
+                        RequestNumber,
+                        RequestStatus,
+                        31);
+
+                return _requestedHashCode.Value;
+            }
+            else
+                return HashCode.Combine(Id,
+                    RequestNumber,
+                    RequestStatus);
         }
     }
 }

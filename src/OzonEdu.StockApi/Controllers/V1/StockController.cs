@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using MediatR;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 using OzonEdu.StockApi.HttpModels;
@@ -33,17 +33,28 @@ namespace OzonEdu.StockApi.Controllers.V1
         {
             // use mediator
             throw new NotSupportedException();
+            //return await _mediator.Send(new GetAllStockItemsQuery(), token);
         }
 
-        [HttpGet("{id:long}")]
-        public async Task<IActionResult> GetById(long id, CancellationToken token)
+        [HttpPost("byskus")]
+        public async Task<IReadOnlyCollection<StockItemPostViewModel>> GetBySkus([FromBody]long[] skus, CancellationToken token)
         {
-            // use mediator
-            throw new NotSupportedException();
+            var result = await _mediator.Send(new GetBySkuIdsQuery() { SkuIds = skus }, token);
+
+            return result.Items.Select(it => new StockItemPostViewModel()
+            {
+                Name = it.Name,
+                Quantity = it.Quantity,
+                Sku = it.Sku,
+                Tags = "",
+                ClothingSize = it.ClothingSizeId,
+                MinimalQuantity = it.MinimalQuantity,
+                StockItemType = it.ItemTypeId
+            }).ToArray();
         }
 
-        [HttpGet("quantity")]
-        public async Task<StockItemQuantityModel[]> GetAvailableQuantity(long[] sku, CancellationToken token)
+        [HttpPost("quantity")]
+        public async Task<StockItemQuantityModel[]> GetAvailableQuantity([FromBody]long[] sku, CancellationToken token)
         {
             var result = await _mediator.Send(new GetStockItemsAvailableQuantityQuery
             {

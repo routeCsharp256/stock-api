@@ -23,7 +23,7 @@
         /// <summary>
         /// Идентификатор типа товара
         /// </summary>
-        public int ItemTypeId { get; set; }
+        public long ItemTypeId { get; set; }
 
         /// <summary>
         /// Количество товара
@@ -33,6 +33,6 @@
         /// <summary>
         /// Минимальное допустимое количество
         /// </summary>
-        public int MinimalQuantity { get; set; }
+        public int? MinimalQuantity { get; set; }
     }
 }

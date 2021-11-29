@@ -18,6 +18,9 @@ namespace OzonEdu.StockApi.Migrator
                 .Build();
             
             var connectionString = configuration.GetSection("DatabaseConnectionOptions:ConnectionString").Get<string>();
+            if (string.IsNullOrWhiteSpace(connectionString))
+                connectionString = "Host=localhost;Port=5426;Database=stock-api;Username=postgres;Password=stockApiPassword";
+            
             var services = new ServiceCollection()
                 .AddFluentMigratorCore()
                 .ConfigureRunner(

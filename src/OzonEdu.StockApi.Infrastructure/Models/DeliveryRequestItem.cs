@@ -5,9 +5,9 @@ namespace OzonEdu.StockApi.Infrastructure.Models
 {
     public class DeliveryRequestItem
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
-        public int DeliveryRequestId { get; set; }
+        public long DeliveryRequestId { get; set; }
 
         public DeliveryRequestStatus RequestStatus { get; set; }
 

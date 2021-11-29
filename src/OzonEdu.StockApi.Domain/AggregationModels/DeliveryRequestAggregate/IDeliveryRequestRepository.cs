@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using OzonEdu.StockApi.Domain.Contracts;
 
@@ -11,10 +12,18 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
     {
         Task<DeliveryRequest> CreateAsync(DeliveryRequest itemToCreate, CancellationToken cancellationToken);
 
+        Task<DeliveryRequest> UpdateAsync(DeliveryRequest itemToUpdate,
+            CancellationToken cancellationToken);
+
         Task<DeliveryRequest> FindByIdAsync(int id, CancellationToken cancellationToken);
 
         Task<DeliveryRequest> FindByRequestNumberAsync(
             RequestNumber requestNumber,
+            CancellationToken cancellationToken);
+
+        Task<IReadOnlyCollection<DeliveryRequest>> GetAllRequestsAsync(CancellationToken cancellationToken);
+
+        Task<IReadOnlyCollection<DeliveryRequest>> GetRequestsByStatusAsync(RequestStatus requestStatus,
             CancellationToken cancellationToken);
     }
 }
