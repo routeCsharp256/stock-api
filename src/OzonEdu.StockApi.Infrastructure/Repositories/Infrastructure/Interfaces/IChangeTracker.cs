@@ -14,7 +14,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure.Interfaces
         /// <summary>
         /// Коллекция всех сущностей, которые так или иначе были использованы в репозитории.
         /// </summary>
-        IEnumerable<Entity> TrackedEntities { get; }
+        IDictionary<int, Entity> TrackedEntities { get; }
 
         /// <summary>
         /// "Записать" сущность как подлежащую "использованию" в рамках выполнения запроса.

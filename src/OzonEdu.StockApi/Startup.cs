@@ -14,6 +14,7 @@ using OzonEdu.StockApi.Extensions;
 using OzonEdu.StockApi.GrpcServices;
 using OzonEdu.StockApi.Infrastructure.Configuration;
 using OzonEdu.StockApi.Infrastructure.Extensions;
+using OzonEdu.StockApi.Infrastructure.Handlers.DomainEvent;
 
 namespace OzonEdu.StockApi
 {
@@ -32,7 +33,7 @@ namespace OzonEdu.StockApi
                 .AddHostedServices()
                 .AddDatabaseConnection(Configuration)
                 .AddRepositories()
-                .AddMediatR(typeof(Startup).Assembly, typeof(DatabaseConnectionOptions).Assembly)
+                .AddApplicationServices()
                 .AddExternalServices(Configuration)
                 .AddKafkaServices(Configuration)
                 .AddOpenTracing();

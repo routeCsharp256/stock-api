@@ -2,7 +2,7 @@
 
 namespace OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem
 {
-    public class CreateStockItemCommand : IRequest<int>
+    public class CreateStockItemCommand : IRequest<long>
     {
         /// <summary>
         /// Идентификатор нового товара
@@ -17,7 +17,7 @@ namespace OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem
         /// <summary>
         /// Тип позиции
         /// </summary>
-        public int StockItemType { get; init; }
+        public long StockItemType { get; init; }
 
         /// <summary>
         /// Размер позиции, если это одежда

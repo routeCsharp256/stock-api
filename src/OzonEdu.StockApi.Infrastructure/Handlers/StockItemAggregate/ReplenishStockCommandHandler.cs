@@ -17,7 +17,7 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
         private readonly IDeliveryRequestRepository _deliveryRequestRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ReplenishStockCommandHandler(IStockItemRepository stockItemRepository, 
+        public ReplenishStockCommandHandler(IStockItemRepository stockItemRepository,
             IDeliveryRequestRepository deliveryRequestRepository, IUnitOfWork unitOfWork)
         {
             _stockItemRepository = stockItemRepository;
@@ -35,8 +35,8 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
             foreach (var stock in stocks)
             {
                 var dataToIncrease = request.Items.FirstOrDefault(it =>
-                    it.Sku.Equals(stock.Sku.Value)) ?? new StockItemQuantityDto(){Quantity = 0};
-                
+                    it.Sku.Equals(stock.Sku.Value)) ?? new StockItemQuantityDto() { Quantity = 0 };
+
                 stock.IncreaseQuantity(dataToIncrease.Quantity);
                 await _stockItemRepository.UpdateAsync(stock, cancellationToken);
             }
@@ -44,9 +44,10 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
             var deliveryRequest = await _deliveryRequestRepository
                 .FindByRequestNumberAsync(new RequestNumber(request.SupplyId), cancellationToken);
             deliveryRequest.ChangeStatus(RequestStatus.Done);
-            
+            await _deliveryRequestRepository.UpdateAsync(deliveryRequest, cancellationToken);
+
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            
+
             return Unit.Value;
         }
     }

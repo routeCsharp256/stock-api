@@ -25,21 +25,26 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
         }
 
         public Sku Sku { get; }
-        
+
         public Name Name { get; }
-        
+
         public Item ItemType { get; }
-        
+
         public ClothingSize ClothingSize { get; private set; }
-        
+
         public Quantity Quantity { get; private set; }
-        
+
         public QuantityValue MinimalQuantity { get; private set; }
 
-        // public static StockItem CreateStockItem(long sku, string name, Item)
-        // {
-        //     
-        // }
+        public static StockItem CreateStockItem(long id, long sku, string name, ItemType itemType,
+            ClothingSize clothingSize, int quantity, int? minimalQuantity)
+        {
+            var result = new StockItem(new Sku(sku), new Name(name), new Item(itemType), clothingSize,
+                new Quantity(quantity),
+                new QuantityValue(minimalQuantity));
+            result.Id = id;
+            return result;
+        }
 
         public void IncreaseQuantity(int valueToIncrease)
         {
@@ -49,7 +54,10 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
             }
 
             Quantity = new Quantity(Quantity.Value + valueToIncrease);
-            AddSupplyArrivedWithStockItemsDomainEvent(Sku, this.ItemType.Type, new Quantity(valueToIncrease));
+            AddSupplyArrivedWithStockItemsDomainEvent(Sku,
+                this.ItemType.Type,
+                this.ClothingSize,
+                new Quantity(valueToIncrease));
         }
 
         public void GiveOutItems(int valueToGiveOut)
@@ -75,13 +83,13 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
         public void SetClothingSize(ClothingSize size)
         {
             if (size is not null &&
-                (ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtStarter) || 
-                 ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtAfterProbation) || 
-                 ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtСonferenceListener) || 
-                 ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtAfterProbation)) || 
-                 ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtConferenceSpeaker) ||
-                 ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtVeteran) ||
-                 ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtVeteran))
+                (ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtStarter) ||
+                 ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtAfterProbation) ||
+                 ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtСonferenceListener) ||
+                 ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtAfterProbation)) ||
+                ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtConferenceSpeaker) ||
+                ItemType.Type.Equals(StockItemAggregate.ItemType.SweatshirtVeteran) ||
+                ItemType.Type.Equals(StockItemAggregate.ItemType.TShirtVeteran))
             {
                 ClothingSize = size;
             }
@@ -91,10 +99,10 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
             }
             else
             {
-                throw new StockItemSizeException($"Item with type {ItemType.Type.Name} cannot get size");    
+                throw new StockItemSizeException($"Item with type {ItemType.Type.Name} cannot get size");
             }
         }
-        
+
         private void SetQuantity(Quantity value)
         {
             if (value.Value < 0)
@@ -126,10 +134,34 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate
             AddDomainEvent(orderStartedDomainEvent);
         }
 
-        private void AddSupplyArrivedWithStockItemsDomainEvent(Sku sku, ItemType itemType, Quantity quantity)
+        private void AddSupplyArrivedWithStockItemsDomainEvent(Sku sku, ItemType itemType,
+            ClothingSize clothingSize, Quantity quantity)
         {
-            var supplyArrivedDomainEvent = new SupplyArrivedWithStockItemsDomainEvent(sku, itemType, quantity);
+            var supplyArrivedDomainEvent =
+                new SupplyArrivedWithStockItemsDomainEvent(sku, itemType, quantity, clothingSize);
             AddDomainEvent(supplyArrivedDomainEvent);
+        }
+
+        public override int GetHashCode()
+        {
+            if (!IsTransient())
+            {
+                if (!_requestedHashCode.HasValue)
+                    _requestedHashCode = HashCode.Combine(Id,
+                        Sku,
+                        Name,
+                        ItemType,
+                        ClothingSize,
+                        31);
+
+                return _requestedHashCode.Value;
+            }
+            else
+                return HashCode.Combine(Id,
+                    Sku,
+                    Name,
+                    ItemType,
+                    ClothingSize);
         }
     }
 }

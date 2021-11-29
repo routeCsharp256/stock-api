@@ -10,7 +10,7 @@ using OzonEdu.StockApi.Infrastructure.Commands.CreateDeliveryRequest;
 
 namespace OzonEdu.StockApi.Infrastructure.Handlers.DeliveryRequestAggregate
 {
-    public class CreateDeliveryRequestCommandHandler : IRequestHandler<CreateDeliveryRequestCommand, int>
+    public class CreateDeliveryRequestCommandHandler : IRequestHandler<CreateDeliveryRequestCommand, long>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDeliveryRequestRepository _deliveryRequestRepository;
@@ -25,7 +25,7 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.DeliveryRequestAggregate
             _supplyServiceClient = supplyServiceClient;
         }
 
-        public async Task<int> Handle(CreateDeliveryRequestCommand request, CancellationToken cancellationToken)
+        public async Task<long> Handle(CreateDeliveryRequestCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.StartTransaction(cancellationToken);
             var deliveryRequest = new DeliveryRequest(

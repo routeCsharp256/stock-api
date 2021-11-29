@@ -1,4 +1,5 @@
 ﻿using Grpc.Net.Client;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -7,6 +8,7 @@ using OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate;
 using OzonEdu.StockApi.Domain.AggregationModels.StockItemAggregate;
 using OzonEdu.StockApi.Domain.Contracts;
 using OzonEdu.StockApi.Infrastructure.Configuration;
+using OzonEdu.StockApi.Infrastructure.Handlers.DomainEvent;
 using OzonEdu.StockApi.Infrastructure.MessageBroker;
 using OzonEdu.StockApi.Infrastructure.Repositories.Implementation;
 using OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure;
@@ -18,10 +20,10 @@ namespace OzonEdu.StockApi.Infrastructure.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            
-            
+            services.AddMediatR(typeof(ReachedMinimumDomainEventHandler).Assembly);
+
             return services;
-         }
+        }
         
         public static IServiceCollection AddDatabaseConnection(this IServiceCollection services,
             IConfiguration configuration)

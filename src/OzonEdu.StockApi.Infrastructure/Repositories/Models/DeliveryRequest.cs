@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace OzonEdu.StockApi.Infrastructure.Repositories.Models
@@ -10,5 +12,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Models
         public long RequestId { get; set; }
         
         public int RequestStatus { get; set; }
+
+        public ICollection<DeliveryRequestSkuMap> DeliveryRequestSkuMaps { get; set; }
     }
 }

@@ -26,7 +26,6 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.DomainEvent
         public async Task Handle(ReachedMinimumStockItemsNumberDomainEvent notification,
             CancellationToken cancellationToken)
         {
-            await _unitOfWork.StartTransaction(cancellationToken);
             var deliveryRequest = new DeliveryRequest(
                 null,
                 RequestStatus.InWork,
@@ -49,7 +48,6 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.DomainEvent
             deliveryRequest.SetRequestNumber(requestNumberResponse.SupplyId);
 
             var result = await _deliveryRequestRepository.CreateAsync(deliveryRequest, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

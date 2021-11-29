@@ -23,7 +23,7 @@
         /// <summary>
         /// Идентификатор типа товара
         /// </summary>
-        public int ItemTypeId { get; set; }
+        public long ItemTypeId { get; set; }
 
         /// <summary>
         /// Количество товара

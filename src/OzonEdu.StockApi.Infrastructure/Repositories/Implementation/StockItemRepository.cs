@@ -106,13 +106,13 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                     var stockItems = await connection.QueryAsync<
                         Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(
                         commandDefinition,
-                        (skuModel, stock, itemType, clothingSize) => new StockItem(
-                            new Sku(skuModel.Id),
-                            new Name(skuModel.Name),
-                            new Item(new ItemType(itemType.Id, itemType.Name)),
+                        (skuModel, stock, itemType, clothingSize) => StockItem.CreateStockItem(stock.Id,
+                            skuModel.Id,
+                            skuModel.Name,
+                            new ItemType(itemType.Id, itemType.Name),
                             clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
-                            new Quantity(stock.Quantity),
-                            new QuantityValue(stock.MinimalQuantity)));
+                            stock.Quantity,
+                            stock.MinimalQuantity));
                     return stockItems.First();
                 });
         }
@@ -145,13 +145,16 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
                     connection.QueryAsync<
                         Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(
                         commandDefinition,
-                        (skuModel, stock, itemType, clothingSize) => new StockItem(
-                            new Sku(skuModel.Id),
-                            new Name(skuModel.Name),
-                            new Item(new ItemType(itemType.Id, itemType.Name)),
-                            clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
-                            new Quantity(stock.Quantity),
-                            new QuantityValue(stock.MinimalQuantity))));
+                        (skuModel, stock, itemType, clothingSize) =>
+                            StockItem.CreateStockItem(stock.Id,
+                            skuModel.Id,
+                            skuModel.Name,
+                            new ItemType(itemType.Id, itemType.Name),
+                            clothingSize?.Id is not null
+                                ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name)
+                                : null,
+                            stock.Quantity,
+                            stock.MinimalQuantity)));
             return result.ToList();
         }
 
@@ -175,13 +178,13 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
             var result = await _queryExecutor.Execute(
                 () => connection.QueryAsync<
                     Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(commandDefinition,
-                    (sku, stock, itemType, clothingSize) => new StockItem(
-                        new Sku(sku.Id),
-                        new Name(sku.Name),
-                        new Item(new ItemType(itemType.Id, itemType.Name)),
+                    (sku, stock, itemType, clothingSize) => StockItem.CreateStockItem(stock.Id,
+                        sku.Id,
+                        sku.Name,
+                        new ItemType(itemType.Id, itemType.Name),
                         clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
-                        new Quantity(stock.Quantity),
-                        new QuantityValue(stock.MinimalQuantity))));
+                        stock.Quantity,
+                        stock.MinimalQuantity)));
             return result.ToList();
         }
 
@@ -211,13 +214,13 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Implementation
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
             var stockItems = await _queryExecutor.Execute( () => connection.QueryAsync<
                 Models.Sku, Models.StockItem, Models.ItemType, Models.ClothingSize, StockItem>(commandDefinition,
-                (skuModel, stock, itemType, clothingSize) => new StockItem(
-                    new Sku(skuModel.Id),
-                    new Name(skuModel.Name),
-                    new Item(new ItemType(itemType.Id, itemType.Name)),
+                (skuModel, stock, itemType, clothingSize) => StockItem.CreateStockItem(stock.Id,
+                    skuModel.Id,
+                    skuModel.Name,
+                    new ItemType(itemType.Id, itemType.Name),
                     clothingSize?.Id is not null ? new ClothingSize(clothingSize.Id.Value, clothingSize.Name) : null,
-                    new Quantity(stock.Quantity),
-                    new QuantityValue(stock.MinimalQuantity))));
+                    stock.Quantity,
+                    stock.MinimalQuantity)));
             
             return stockItems.ToList();
         }

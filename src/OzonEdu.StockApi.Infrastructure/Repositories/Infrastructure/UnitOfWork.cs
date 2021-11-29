@@ -16,16 +16,16 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
         private NpgsqlTransaction _npgsqlTransaction;
         
         private readonly IDbConnectionFactory<NpgsqlConnection> _dbConnectionFactory = null;
-        private readonly IPublisher _publisher;
+        private readonly IMediator _mediatr;
         private readonly IChangeTracker _changeTracker;
 
         public UnitOfWork(
             IDbConnectionFactory<NpgsqlConnection> dbConnectionFactory,
-            IPublisher publisher,
+            IMediator mediatr,
             IChangeTracker changeTracker)
         {
             _dbConnectionFactory = dbConnectionFactory;
-            _publisher = publisher;
+            _mediatr = mediatr;
             _changeTracker = changeTracker;
         }
 
@@ -50,14 +50,14 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Infrastructure
                 _changeTracker.TrackedEntities
                     .SelectMany(x =>
                     {
-                        var events = x.DomainEvents.ToList();
-                        x.ClearDomainEvents();
+                        var events = x.Value.DomainEvents.ToList();
+                        x.Value.ClearDomainEvents();
                         return events;
                     }));
             // Можно отправлять все и сразу через Task.WhenAll.
             while (domainEvents.TryDequeue(out var notification))
             {
-                await _publisher.Publish(notification, cancellationToken);
+                await _mediatr.Publish(notification, cancellationToken);
             }
 
             await _npgsqlTransaction.CommitAsync(cancellationToken);

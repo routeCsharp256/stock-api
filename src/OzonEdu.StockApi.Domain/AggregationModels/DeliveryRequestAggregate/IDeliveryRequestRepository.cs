@@ -12,6 +12,9 @@ namespace OzonEdu.StockApi.Domain.AggregationModels.DeliveryRequestAggregate
     {
         Task<DeliveryRequest> CreateAsync(DeliveryRequest itemToCreate, CancellationToken cancellationToken);
 
+        Task<DeliveryRequest> UpdateAsync(DeliveryRequest itemToUpdate,
+            CancellationToken cancellationToken);
+
         Task<DeliveryRequest> FindByIdAsync(int id, CancellationToken cancellationToken);
 
         Task<DeliveryRequest> FindByRequestNumberAsync(

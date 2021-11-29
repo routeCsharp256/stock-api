@@ -8,5 +8,7 @@ namespace OzonEdu.StockApi.Infrastructure.Repositories.Models
         public long DeliveryRequestsId { get; set; }
 
         public long SkuId { get; set; }
+
+        public DeliveryRequest DeliveryRequest { get; set; }
     }
 }

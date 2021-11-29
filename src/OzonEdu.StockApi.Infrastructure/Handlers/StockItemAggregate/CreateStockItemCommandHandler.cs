@@ -11,7 +11,7 @@ using OzonEdu.StockApi.Infrastructure.Commands.CreateStockItem;
 
 namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
 {
-    public class CreateStockItemCommandHandler : IRequestHandler<CreateStockItemCommand, int>
+    public class CreateStockItemCommandHandler : IRequestHandler<CreateStockItemCommand, long>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStockItemRepository _stockItemRepository;
@@ -22,7 +22,7 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.StockItemAggregate
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(CreateStockItemCommand request, CancellationToken cancellationToken)
+        public async Task<long> Handle(CreateStockItemCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.StartTransaction(cancellationToken);
             var stockInDb = await _stockItemRepository.FindBySkuAsync(new Sku(request.Sku), cancellationToken);

@@ -61,7 +61,7 @@ namespace OzonEdu.StockApi.Controllers.V1
         }
 
         [HttpPost]
-        public async Task<int> Create(
+        public async Task<long> Create(
             CreateDeliveryRequestInputModel value,
             CancellationToken cancellationToken)
         {

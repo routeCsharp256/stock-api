@@ -28,7 +28,7 @@ namespace OzonEdu.StockApi.HostedServices
         public SupplyConsumerHostedService(
             IOptions<KafkaConfiguration> config,
             IServiceScopeFactory scopeFactory,
-            ILogger<SupplyConsumerHostedService> logger, IMediator mediator)
+            ILogger<SupplyConsumerHostedService> logger)
         {
             _config = config.Value;
             _scopeFactory = scopeFactory;

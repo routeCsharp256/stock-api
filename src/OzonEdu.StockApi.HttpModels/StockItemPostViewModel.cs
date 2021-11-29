@@ -6,7 +6,7 @@ namespace OzonEdu.StockApi.HttpModels
         
         public string Name { get; init; }
 
-        public int StockItemType { get; init; }
+        public long StockItemType { get; init; }
 
         public int? ClothingSize { get; init; }
 
