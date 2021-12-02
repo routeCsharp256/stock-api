@@ -32,7 +32,7 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.DomainEvent
                             Sku = notification.StockItemSku.Value,
                             ItemTypeId = notification.ItemType.Id,
                             ItemTypeName = notification.ItemType.Name,
-                            ClothingSize = notification.ClothingSize.Id
+                            ClothingSize = notification.ClothingSize?.Id
                         }}
                     })
                 }, cancellationToken);
