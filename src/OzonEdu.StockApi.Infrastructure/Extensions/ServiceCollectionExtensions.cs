@@ -72,7 +72,7 @@ namespace OzonEdu.StockApi.Infrastructure.Extensions
             IConfiguration configuration)
         {
             services.Configure<KafkaConfiguration>(configuration);
-            services.AddScoped<IProducerBuilderWrapper, ProducerBuilderWrapper>();
+            services.AddSingleton<IProducerBuilderWrapper, ProducerBuilderWrapper>();
 
             return services;
         }

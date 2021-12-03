@@ -21,7 +21,7 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.DomainEvent
 
         public Task Handle(SupplyArrivedWithStockItemsDomainEvent notification, CancellationToken cancellationToken)
         {
-            return _producerBuilderWrapper.Producer.ProduceAsync(_producerBuilderWrapper.StockReshippedTopic,
+            _producerBuilderWrapper.Producer.Produce(_producerBuilderWrapper.StockReshippedTopic,
                 new Message<string, string>()
                 {
                     Key = notification.StockItemSku.Value.ToString(),
@@ -35,7 +35,9 @@ namespace OzonEdu.StockApi.Infrastructure.Handlers.DomainEvent
                             ClothingSize = notification.ClothingSize?.Id
                         }}
                     })
-                }, cancellationToken);
+                });
+            
+            return Task.CompletedTask;
         }
     }
 }
